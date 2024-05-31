@@ -8,8 +8,6 @@ class RegisterController extends GetxController {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -17,8 +15,6 @@ class RegisterController extends GetxController {
     String email,
     String password,
     String name,
-    String address,
-    String phone,
   ) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
@@ -27,8 +23,6 @@ class RegisterController extends GetxController {
         userCredential.user!.uid,
         email,
         name,
-        address,
-        phone,
       );
 
       Get.snackbar(
@@ -89,15 +83,11 @@ class RegisterController extends GetxController {
     String userId,
     String email,
     String name,
-    String address,
-    String phone,
   ) async {
     try {
       await FirebaseFirestore.instance.collection('users').doc(userId).set({
         'email': email,
         'name': name,
-        'address': address,
-        'phone': phone,
       });
     } catch (e) {
       print('Error saving user info: $e');
@@ -109,8 +99,6 @@ class RegisterController extends GetxController {
     emailController.dispose();
     passwordController.dispose();
     nameController.dispose();
-    addressController.dispose();
-    phoneController.dispose();
     confirmPasswordController.dispose();
     super.onClose();
   }
