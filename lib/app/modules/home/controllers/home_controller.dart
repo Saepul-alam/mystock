@@ -14,30 +14,69 @@ class HomeController extends GetxController {
   final nameController = TextEditingController();
   final addressController = TextEditingController();
   final phoneController = TextEditingController();
-
+  late Stream<QuerySnapshot<Map<String, dynamic>>> _streamData;
   @override
   void onInit() {
     // Load user data when the controller is initialized
     super.onInit();
     getUserData();
+    _streamData = streamData();
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> streamData() {
     CollectionReference<Map<String, dynamic>> data =
-        _firestore.collection('recipe');
-    return data.orderBy('title', descending: true).snapshots();
+        _firestore.collection('barang');
+    return data.orderBy('nama', descending: true).snapshots();
+  }
+
+  void search(String keyword) {
+    _streamData = FirebaseFirestore.instance
+        .collection('barang')
+        .where('nama', isGreaterThanOrEqualTo: keyword)
+        .snapshots();
+    update(); // Update the stream to reflect changes
+  }
+
+  void deleteData(String docID) {
+    try {
+      Get.defaultDialog(
+          title: "Delete Barang",
+          middleText: "Are you sure you want to delete this Barang?",
+          onConfirm: () {
+            _firestore.collection('barang').doc(docID).delete();
+            Get.back();
+            Get.snackbar(
+              'Success',
+              'Data deleted successfully',
+              snackPosition: SnackPosition.BOTTOM,
+              duration: Duration(seconds: 2),
+              margin: EdgeInsets.all(12),
+            );
+          },
+          textConfirm: "Yes, I'm sure",
+          textCancel: "No");
+    } catch (e) {
+      print(e);
+      Get.snackbar(
+        'Error',
+        'Cannot delete this Barang',
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 2),
+        margin: EdgeInsets.all(12),
+      );
+    }
   }
 
   Future<void> getImage(bool gallery) async {
     final picker = ImagePicker();
     XFile? pickedFile;
-    
+
     if (gallery) {
       pickedFile = await picker.pickImage(source: ImageSource.gallery);
     } else {
       pickedFile = await picker.pickImage(source: ImageSource.camera);
     }
-    
+
     if (pickedFile != null) {
       image.value = pickedFile;
     }
@@ -51,8 +90,7 @@ class HomeController extends GetxController {
   void getUserData() async {
     final user = _auth.currentUser;
     if (user != null) {
-      final userData =
-          await _firestore.collection('users').doc(user.uid).get();
+      final userData = await _firestore.collection('users').doc(user.uid).get();
       if (userData.exists) {
         nameController.text = userData['name'] ?? '';
         addressController.text = userData['address'] ?? '';

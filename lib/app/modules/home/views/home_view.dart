@@ -1,79 +1,24 @@
-// import 'dart:io';
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import '../../../routes/app_pages.dart';
-// import '../controllers/home_controller.dart';
-
-// class HomeView extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     final HomeController controller = Get.find<HomeController>();
-
-//     return DefaultTabController(
-//       length: 3,
-//       child: Scaffold(
-//         appBar: AppBar(
-//           title: Text(
-//             'SRI REZEKI',
-//             style: TextStyle(color: Color(0xffffffff)),
-//           ),
-//           backgroundColor: Color(0xFF478755),
-//           centerTitle: true,
-//           actions: [
-//             IconButton(
-//               onPressed: () {
-//                 Get.toNamed(Routes.REGISTER);
-//               },
-//               icon: Row(
-//                 // Menggunakan Row untuk menampilkan dua ikon sekaligus
-//                 children: [
-//                   Icon(Icons.account_circle), // ikon profil
-//                   Icon(Icons.add), // ikon tambah
-//                 ],
-//               ),
-//             ),
-//             body: TabBarView(
-//           children: [
-//             // Isi tab
-//             // Misalnya: StockView(), PenjualanView(), RiwayatView()
-//           ],
-//         ),
-//         bottomNavigationBar: TabBar(
-//           tabs: [
-//             Text('Stock'),
-//             Text('Penjualan'),
-//             Text('Riwayat'),
-//           ],
-//         ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../routes/app_pages.dart';
 import '../controllers/home_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HomeController controller = Get.find<HomeController>();
+    TextEditingController searchController = TextEditingController();
 
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Color(0xFF478755),
           title: Text(
             'SRI REZEKI',
             style: TextStyle(color: Color(0xffffffff)),
           ),
-          backgroundColor: Color(0xFF478755),
-          centerTitle: true,
           actions: [
             IconButton(
               onPressed: () {
@@ -81,24 +26,190 @@ class HomeView extends StatelessWidget {
               },
               icon: Row(
                 children: [
-                  Icon(Icons.account_circle), // ikon profil
-                  Icon(Icons.add), // ikon tambah
+                  Icon(
+                    Icons.account_circle,
+                    color: Colors.white,
+                  ),
+                  Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
                 ],
               ),
             ),
           ],
-          bottom: TabBar(
-            tabs: [
-              Text('Stock'),
-              Text('Penjualan'),
-              Text('Riwayat'),
-            ],
-          ),
         ),
-        body: TabBarView(
+        body: Column(
           children: [
-            // Isi tab
-            // Misalnya: StockView(), PenjualanView(), RiwayatView()
+            Padding(
+              padding: EdgeInsets.all(15.0),
+              child: TextField(
+                controller: searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search...',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                ),
+                onChanged: (value) {
+                  controller
+                      .search(value); // Call search function on controller
+                },
+              ),
+            ),
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: controller.streamData(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        'Error fetching data',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    );
+                  } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No data',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    );
+                  } else {
+                    var data = snapshot.data!.docs;
+                    return ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: Color(0xFF478755), // Background color green
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          margin: EdgeInsets.symmetric(
+                              vertical: 4.0, horizontal: 8.0),
+                          child: ListTile(
+                            title: Text(
+                              data[index]['nama'],
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Stock: ${data[index]['stock']}',
+                                  style: TextStyle(
+                                      color:
+                                          Color.fromARGB(221, 247, 255, 183)),
+                                ),
+                                Text(
+                                  'Harga: ${data[index]['harga']}',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () => Get.toNamed(
+                                          Routes.UPDATE,
+                                          arguments: data[index].id),
+                                      child: Text(
+                                        'Edit',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        backgroundColor:
+                                            Colors.green, // Text color white
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        // Replace with your penjualan logic
+                                        Get.snackbar(
+                                          'Penjualan',
+                                          'Functionality not implemented yet',
+                                          snackPosition: SnackPosition.BOTTOM,
+                                          duration: Duration(seconds: 2),
+                                          margin: EdgeInsets.all(12),
+                                          backgroundColor: Colors.green,
+                                          colorText: Colors.white,
+                                        );
+                                      },
+                                      child: Text(
+                                        'Penjualan',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        backgroundColor:
+                                            Colors.green, // Text color white
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            trailing: IconButton(
+                              onPressed: () =>
+                                  controller.deleteData(data[index].id),
+                              icon: Icon(Icons.delete),
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Color(0xFF478755),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: InkWell(
+                onTap: () {
+                  Get.toNamed(
+                      Routes.CREATE); // Navigate to create input data page
+                },
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12.0),
+                  child: Center(
+                    child: Text(
+                      'Input Barang',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            TabBar(
+              indicatorColor: Colors.green[900],
+              tabs: [
+                Tab(text: 'Stock'),
+                Tab(text: 'Penjualan'),
+                Tab(text: 'Riwayat'),
+              ],
+            ),
           ],
         ),
       ),

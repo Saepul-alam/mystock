@@ -67,45 +67,41 @@ class LoginView extends GetView<LoginController> {
                   ),
                 ),
                 SizedBox(height: 10),
-                                  Container(
-                                    width: 300,
-                                    padding:
-                                        const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Password',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                        SizedBox(height: 5),
-                                        TextField(
-                                          obscureText: true,
-                                          controller:
-                                              controller.passwordController,
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            hintText: 'Enter your password',
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                Container(
+                  width: 300,
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Password',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      TextField(
+                        obscureText: true,
+                        controller: controller.passwordController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          hintText: 'Enter your password',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 SizedBox(height: 10),
                 Container(
                     height: 50,
                     padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF478755),
-                        onPrimary: Colors.white,
+                        foregroundColor: Colors.white,
+                        backgroundColor: Color(0xFF478755),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(32.0),
                         ),

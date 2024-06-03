@@ -1,8 +1,6 @@
-
 import 'package:mystock/app/modules/reset_password/controllers/reset_password_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 
 class ResetPasswordView extends GetView<ResetPasswordController> {
   @override
@@ -71,9 +69,7 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
                           controller: controller.emailController,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
-                              
                               borderRadius: BorderRadius.circular(10),
-                              
                             ),
                             hintText: 'Enter your email',
                           ),
@@ -86,8 +82,8 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
                         padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            primary: Color(0xFF478755),
-                            onPrimary: Colors.white,
+                            foregroundColor: Colors.white,
+                            backgroundColor: Color(0xFF478755),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -104,8 +100,8 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
                         padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              primary: Color(0xFF478755),
-                              onPrimary: Colors.white,
+                              foregroundColor: Colors.white,
+                              backgroundColor: Color(0xFF478755),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
