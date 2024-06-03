@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginView extends GetView<LoginController> {
+  const LoginView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,37 +68,33 @@ class LoginView extends GetView<LoginController> {
                   ),
                 ),
                 SizedBox(height: 10),
-                                  Container(
-                                    width: 300,
-                                    padding:
-                                        const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Password',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                        SizedBox(height: 5),
-                                        TextField(
-                                          obscureText: true,
-                                          controller:
-                                              controller.passwordController,
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            hintText: 'Enter your password',
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                Container(
+                  width: 300,
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Password',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      TextField(
+                        obscureText: true,
+                        controller: controller.passwordController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          hintText: 'Enter your password',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 SizedBox(height: 10),
                 Container(
                     height: 50,
