@@ -1,5 +1,10 @@
 import 'package:get/get.dart';
 
+import 'package:mystock/app/modules/create/bindings/create_binding.dart';
+import 'package:mystock/app/modules/create/views/create_view.dart';
+import 'package:mystock/app/modules/update/bindings/update_binding.dart';
+import 'package:mystock/app/modules/update/views/update_view.dart';
+
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
@@ -44,6 +49,16 @@ class AppPages {
       name: _Paths.SPLASH,
       page: () => const SplashView(),
       binding: SplashBinding(),
+    ),
+    GetPage(
+      name: _Paths.CREATE,
+      page: () => CreateView(),
+      binding: CreateBinding(),
+    ),
+    GetPage(
+      name: _Paths.UPDATE,
+      page: () => UpdateView(),
+      binding: UpdateBinding(),
     ),
   ];
 }
