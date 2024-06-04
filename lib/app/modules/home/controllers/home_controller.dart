@@ -10,23 +10,19 @@ class HomeController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  final image = Rx<XFile?>(null);
-  final nameController = TextEditingController();
-  final addressController = TextEditingController();
-  final phoneController = TextEditingController();
+  // Controller untuk Tab Stock Barang
+
   late Stream<QuerySnapshot<Map<String, dynamic>>> _streamData;
   @override
   void onInit() {
-    // Load user data when the controller is initialized
     super.onInit();
-    getUserData();
     _streamData = streamData();
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> streamData() {
     CollectionReference<Map<String, dynamic>> data =
         _firestore.collection('barang');
-    return data.orderBy('nama', descending: true).snapshots();
+    return data.orderBy('nama', descending: false).snapshots();
   }
 
   void search(String keyword) {
@@ -34,7 +30,7 @@ class HomeController extends GetxController {
         .collection('barang')
         .where('nama', isGreaterThanOrEqualTo: keyword)
         .snapshots();
-    update(); // Update the stream to reflect changes
+    update();
   }
 
   void deleteData(String docID) {
@@ -67,72 +63,79 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> getImage(bool gallery) async {
-    final picker = ImagePicker();
-    XFile? pickedFile;
-
-    if (gallery) {
-      pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    } else {
-      pickedFile = await picker.pickImage(source: ImageSource.camera);
-    }
-
-    if (pickedFile != null) {
-      image.value = pickedFile;
-    }
-  }
-
   Future<void> logout() async {
     await _auth.signOut();
     Get.offAllNamed(Routes.LOGIN);
   }
 
-  void getUserData() async {
-    final user = _auth.currentUser;
-    if (user != null) {
-      final userData = await _firestore.collection('users').doc(user.uid).get();
-      if (userData.exists) {
-        nameController.text = userData['name'] ?? '';
-        addressController.text = userData['address'] ?? '';
-        phoneController.text = userData['phone'] ?? '';
+  // Controller untuk Tab Penjualan
+
+  void tambahPenjualan(String nama, int quantity, int totalHarga) async {
+    try {
+      if (_firestore
+              .collection('penjualan')
+              .where('nama', isEqualTo: nama)
+              .toString() ==
+          nama) {
+        Get.defaultDialog(
+            title: 'Error',
+            middleText: 'Barang telah ada di penjualan',
+            textCancel: 'Oke');
+      } else {
+        await _firestore.collection('penjualan').add({
+          'nama': nama,
+          'quantity': quantity,
+          'total_harga': totalHarga,
+        });
       }
+    } catch (e) {
+      print(e);
     }
   }
 
-  Future<void> updateUserData() async {
-    final user = _auth.currentUser;
-    if (user != null) {
-      try {
-        await _firestore.collection('users').doc(user.uid).set({
-          'name': nameController.text.trim(),
-          'address': addressController.text.trim(),
-          'phone': phoneController.text.trim(),
-        }, SetOptions(merge: true));
-        Get.snackbar(
-          'Success',
-          'User data updated successfully',
-          snackPosition: SnackPosition.BOTTOM,
-          duration: const Duration(seconds: 2),
-          margin: const EdgeInsets.all(12),
-        );
-      } catch (e) {
-        print('Error updating user data: $e');
-        Get.snackbar(
-          'Error',
-          'Failed to update user data',
-          snackPosition: SnackPosition.BOTTOM,
-          duration: const Duration(seconds: 2),
-          margin: const EdgeInsets.all(12),
-        );
-      }
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamDataPenjualan() {
+    CollectionReference<Map<String, dynamic>> data =
+        _firestore.collection('penjualan');
+    return data.snapshots();
+  }
+
+  void deleteDataPenjualan(String docID) {
+    try {
+      Get.defaultDialog(
+          title: "Delete Barang",
+          middleText: "Yakin menghapus barang ini?",
+          onConfirm: () {
+            _firestore.collection('penjualan').doc(docID).delete();
+            Get.back();
+            Get.snackbar(
+              'Success',
+              'Data deleted successfully',
+              snackPosition: SnackPosition.BOTTOM,
+              duration: const Duration(seconds: 2),
+              margin: const EdgeInsets.all(12),
+            );
+          },
+          textConfirm: "Yes, I'm sure",
+          textCancel: "No");
+    } catch (e) {
+      print(e);
+      Get.snackbar(
+        'Error',
+        'Cannot delete this Barang',
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 2),
+        margin: const EdgeInsets.all(12),
+      );
     }
   }
 
-  @override
-  void onClose() {
-    nameController.dispose();
-    addressController.dispose();
-    phoneController.dispose();
-    super.onClose();
+  void updateJumlah(String docID, int quantity) async {
+    try {
+      await _firestore.collection('penjualan').doc(docID).update({
+        'quantity': quantity,
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 }
