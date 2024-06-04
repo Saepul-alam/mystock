@@ -71,12 +71,13 @@ class HomeController extends GetxController {
   // Controller untuk Tab Penjualan
 
   void tambahPenjualan(String nama, int quantity, int totalHarga) async {
+    var isExist = await _firestore
+        .collection('penjualan')
+        .where('nama', isEqualTo: nama)
+        .get();
+
     try {
-      if (_firestore
-              .collection('penjualan')
-              .where('nama', isEqualTo: nama)
-              .toString() ==
-          nama) {
+      if (isExist.size == 1) {
         Get.defaultDialog(
             title: 'Error',
             middleText: 'Barang telah ada di penjualan',
