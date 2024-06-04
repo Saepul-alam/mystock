@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../routes/app_pages.dart';
 
@@ -10,7 +9,7 @@ class HomeController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Controller untuk Tab Stock Barang
+// ================================= Controller untuk Tab Stock Barang ==================================
 
   late Stream<QuerySnapshot<Map<String, dynamic>>> _streamData;
   @override
@@ -68,14 +67,14 @@ class HomeController extends GetxController {
     Get.offAllNamed(Routes.LOGIN);
   }
 
-  // Controller untuk Tab Penjualan
+// ====================== Controller untuk Tab Penjualan ============================
 
-  void tambahPenjualan(String nama, int quantity, int totalHarga) async {
+  void tambahPenjualan(
+      String nama, int quantity, int hargaSatuan, int totalHargaBarang) async {
     var isExist = await _firestore
         .collection('penjualan')
         .where('nama', isEqualTo: nama)
         .get();
-
     try {
       if (isExist.size == 1) {
         Get.defaultDialog(
@@ -86,7 +85,8 @@ class HomeController extends GetxController {
         await _firestore.collection('penjualan').add({
           'nama': nama,
           'quantity': quantity,
-          'total_harga': totalHarga,
+          'harga_satuan': hargaSatuan,
+          'total_harga_barang': totalHargaBarang,
         });
       }
     } catch (e) {
@@ -138,5 +138,52 @@ class HomeController extends GetxController {
     } catch (e) {
       print(e);
     }
+  }
+
+  void updateHarga(String docId, int hargaBarang) async {
+    try {
+      await _firestore.collection('penjualan').doc(docId).update({
+        'total_harga_barang': hargaBarang,
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  late TextEditingController namaPelangganController;
+  void submitPenjualan() {
+    Get.defaultDialog(
+      title: 'Konfirmasi Nama Pelanggan',
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(padding: EdgeInsets.only(bottom: 5)),
+          TextField(
+            controller: namaPelangganController,
+            decoration: const InputDecoration(
+              enabledBorder: UnderlineInputBorder(),
+              labelText: 'Masukkan nama pelanggan',
+            ),
+          ),
+          const Padding(padding: EdgeInsets.only(bottom: 15))
+        ],
+      ),
+      onConfirm: () {},
+      textConfirm: 'Lanjutkan',
+      textCancel: 'Batal',
+      radius: 20,
+    );
+  }
+
+  @override
+  void onReady() {
+    namaPelangganController = TextEditingController();
+    super.onReady();
+  }
+
+  @override
+  void onClose() {
+    namaPelangganController.dispose();
+    super.onClose();
   }
 }

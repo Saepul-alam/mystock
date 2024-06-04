@@ -55,6 +55,8 @@ class HomeView extends StatelessWidget {
               SizedBox(
                 height: 700,
                 child: TabBarView(children: [
+//  =============================== Tab Stok Barang ================================
+
                   Column(
                     children: [
                       Padding(
@@ -156,12 +158,15 @@ class HomeView extends StatelessWidget {
                                               const SizedBox(width: 8),
                                               ElevatedButton(
                                                 onPressed: () {
-                                                  int totalHarga = int.parse(
+                                                  int hargaSatuan = int.parse(
                                                       data[index]['harga']);
+                                                  int totalHargaBarang =
+                                                      hargaSatuan * 1;
                                                   controller.tambahPenjualan(
                                                       data[index]['nama'],
                                                       1,
-                                                      totalHarga);
+                                                      hargaSatuan,
+                                                      totalHargaBarang);
                                                 },
                                                 style: ElevatedButton.styleFrom(
                                                   foregroundColor: Colors.white,
@@ -224,10 +229,13 @@ class HomeView extends StatelessWidget {
                       ),
                     ],
                   ),
+
+// ========================== Tab Penjualan =============================
+
                   Column(
                     children: [
                       SizedBox(
-                        height: 600,
+                        height: 650,
                         child: StreamBuilder<QuerySnapshot>(
                             stream: controller.streamDataPenjualan(),
                             builder: (context, snapshot) {
@@ -250,183 +258,200 @@ class HomeView extends StatelessWidget {
                                 );
                               } else {
                                 var data = snapshot.data!.docs;
-                                return ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: data.length,
-                                  itemBuilder: (context, index) {
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF478755),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 4.0, horizontal: 8.0),
-                                      child: ListTile(
-                                        title: Text(
-                                          data[index]['nama'],
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 18),
-                                        ),
-                                        subtitle: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "Jumlah: ${data[index]['quantity'].toString()}",
-                                              style: const TextStyle(
+
+                                hitungTotalHarga() {
+                                  num totalHarga = 0;
+                                  for (int i = 0; i < data.length; i++) {
+                                    totalHarga = totalHarga +
+                                        data[i]['total_harga_barang'];
+                                  }
+                                  return totalHarga;
+                                }
+
+                                return Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 580,
+                                      child: ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: data.length,
+                                        itemBuilder: (context, index) {
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFF478755),
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                            margin: const EdgeInsets.symmetric(
+                                                vertical: 4.0, horizontal: 8.0),
+                                            child: ListTile(
+                                              title: Text(
+                                                data[index]['nama'],
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 18),
+                                              ),
+                                              subtitle: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Jumlah: ${data[index]['quantity'].toString()}",
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    "Harga Barang: ${data[index]['harga_satuan']}"
+                                                        .toString(),
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      ElevatedButton(
+                                                        onPressed: () {
+                                                          int jumlah = data[
+                                                                      index]
+                                                                  ['quantity'] +
+                                                              1;
+                                                          int hargaBarang = data[
+                                                                      index][
+                                                                  'harga_satuan'] *
+                                                              jumlah;
+                                                          controller
+                                                              .updateHarga(
+                                                                  data[index]
+                                                                      .id,
+                                                                  hargaBarang);
+                                                          controller
+                                                              .updateJumlah(
+                                                                  data[index]
+                                                                      .id,
+                                                                  jumlah);
+                                                        },
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          foregroundColor:
+                                                              Colors.white,
+                                                          backgroundColor: Colors
+                                                              .green, // Text color white
+                                                        ),
+                                                        child: const Text(
+                                                          '+1',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 12),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(width: 8),
+                                                      ElevatedButton(
+                                                        onPressed: () {
+                                                          int jumlah = data[
+                                                                      index]
+                                                                  ['quantity'] -
+                                                              1;
+                                                          int hargaBarang = data[
+                                                                      index][
+                                                                  'harga_satuan'] *
+                                                              jumlah;
+                                                          if (jumlah < 1) {
+                                                            Get.defaultDialog(
+                                                                title: 'Error',
+                                                                middleText:
+                                                                    'Jumlah barang tidak bisa kurang dari 0',
+                                                                textCancel:
+                                                                    'Oke');
+                                                          } else {
+                                                            controller
+                                                                .updateJumlah(
+                                                                    data[index]
+                                                                        .id,
+                                                                    jumlah);
+                                                            controller
+                                                                .updateHarga(
+                                                                    data[index]
+                                                                        .id,
+                                                                    hargaBarang);
+                                                          }
+                                                        },
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          foregroundColor:
+                                                              Colors.white,
+                                                          backgroundColor: Colors
+                                                              .green, // Text color white
+                                                        ),
+                                                        child: const Text(
+                                                          '-1',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 12),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              trailing: IconButton(
+                                                onPressed: () => controller
+                                                    .deleteDataPenjualan(
+                                                        data[index].id),
+                                                icon: const Icon(Icons.delete),
                                                 color: Colors.white,
-                                                fontSize: 14,
                                               ),
                                             ),
-                                            Text(
-                                              "Total Harga: ${data[index]['total_harga'] * data[index]['quantity']}"
-                                                  .toString(),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                ElevatedButton(
-                                                  onPressed: () {
-                                                    int jumlah = data[index]
-                                                            ['quantity'] +
-                                                        10;
-                                                    controller.updateJumlah(
-                                                        data[index].id, jumlah);
-                                                  },
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    foregroundColor:
-                                                        Colors.white,
-                                                    backgroundColor: Colors
-                                                        .green, // Text color white
-                                                  ),
-                                                  child: const Text(
-                                                    '+10',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 12),
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                ElevatedButton(
-                                                  onPressed: () {
-                                                    int jumlah = data[index]
-                                                            ['quantity'] +
-                                                        1;
-                                                    controller.updateJumlah(
-                                                        data[index].id, jumlah);
-                                                  },
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    foregroundColor:
-                                                        Colors.white,
-                                                    backgroundColor: Colors
-                                                        .green, // Text color white
-                                                  ),
-                                                  child: const Text(
-                                                    '+1',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 12),
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                ElevatedButton(
-                                                  onPressed: () {
-                                                    int jumlah = data[index]
-                                                            ['quantity'] -
-                                                        1;
-                                                    if (jumlah < 1) {
-                                                      Get.defaultDialog(
-                                                          title: 'Error',
-                                                          middleText:
-                                                              'Jumlah barang tidak bisa kurang dari 0',
-                                                          textCancel: 'Oke');
-                                                    } else {
-                                                      controller.updateJumlah(
-                                                          data[index].id,
-                                                          jumlah);
-                                                    }
-                                                  },
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    foregroundColor:
-                                                        Colors.white,
-                                                    backgroundColor: Colors
-                                                        .green, // Text color white
-                                                  ),
-                                                  child: const Text(
-                                                    '-1',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 12),
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                ElevatedButton(
-                                                  onPressed: () {
-                                                    int jumlah = data[index]
-                                                            ['quantity'] -
-                                                        10;
-                                                    if (jumlah < 1) {
-                                                      Get.defaultDialog(
-                                                          title: 'Error',
-                                                          middleText:
-                                                              'Jumlah barang tidak bisa kurang dari 0',
-                                                          textCancel: 'Oke');
-                                                    } else {
-                                                      controller.updateJumlah(
-                                                          data[index].id,
-                                                          jumlah);
-                                                    }
-                                                  },
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    foregroundColor:
-                                                        Colors.white,
-                                                    backgroundColor: Colors
-                                                        .green, // Text color white
-                                                  ),
-                                                  child: const Text(
-                                                    '-10',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 12),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        trailing: IconButton(
-                                          onPressed: () =>
-                                              controller.deleteDataPenjualan(
-                                                  data[index].id),
-                                          icon: const Icon(Icons.delete),
-                                          color: Colors.white,
-                                        ),
+                                          );
+                                        },
                                       ),
-                                    );
-                                  },
+                                    ),
+                                    const Padding(
+                                        padding: EdgeInsets.only(top: 10)),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Text(
+                                            'Total Harga:',
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          Text(
+                                            '${hitungTotalHarga()}',
+                                            style: const TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w500),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    const Padding(
+                                        padding: EdgeInsets.only(top: 10)),
+                                  ],
                                 );
                               }
                             }),
                       ),
-                      const Padding(padding: EdgeInsets.only(top: 40)),
                       Container(
                         width: 400,
                         decoration: BoxDecoration(
                             color: const Color(0xFF478755),
                             borderRadius: BorderRadius.circular(20)),
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            controller.submitPenjualan();
+                          },
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20),
