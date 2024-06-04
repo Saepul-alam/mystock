@@ -49,8 +49,8 @@ class HomeController extends GetxController {
               'Success',
               'Data deleted successfully',
               snackPosition: SnackPosition.BOTTOM,
-              duration: Duration(seconds: 2),
-              margin: EdgeInsets.all(12),
+              duration: const Duration(seconds: 2),
+              margin: const EdgeInsets.all(12),
             );
           },
           textConfirm: "Yes, I'm sure",
@@ -61,8 +61,8 @@ class HomeController extends GetxController {
         'Error',
         'Cannot delete this Barang',
         snackPosition: SnackPosition.BOTTOM,
-        duration: Duration(seconds: 2),
-        margin: EdgeInsets.all(12),
+        duration: const Duration(seconds: 2),
+        margin: const EdgeInsets.all(12),
       );
     }
   }
@@ -112,8 +112,8 @@ class HomeController extends GetxController {
           'Success',
           'User data updated successfully',
           snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 2),
-          margin: EdgeInsets.all(12),
+          duration: const Duration(seconds: 2),
+          margin: const EdgeInsets.all(12),
         );
       } catch (e) {
         print('Error updating user data: $e');
@@ -121,8 +121,8 @@ class HomeController extends GetxController {
           'Error',
           'Failed to update user data',
           snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 2),
-          margin: EdgeInsets.all(12),
+          duration: const Duration(seconds: 2),
+          margin: const EdgeInsets.all(12),
         );
       }
     }
