@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../routes/app_pages.dart';
 
@@ -10,23 +9,19 @@ class HomeController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  final image = Rx<XFile?>(null);
-  final nameController = TextEditingController();
-  final addressController = TextEditingController();
-  final phoneController = TextEditingController();
+// ================================= Controller untuk Tab Stock Barang ==================================
+
   late Stream<QuerySnapshot<Map<String, dynamic>>> _streamData;
   @override
   void onInit() {
-    // Load user data when the controller is initialized
     super.onInit();
-    getUserData();
     _streamData = streamData();
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> streamData() {
     CollectionReference<Map<String, dynamic>> data =
         _firestore.collection('barang');
-    return data.orderBy('nama', descending: true).snapshots();
+    return data.orderBy('nama', descending: false).snapshots();
   }
 
   void search(String keyword) {
@@ -34,7 +29,7 @@ class HomeController extends GetxController {
         .collection('barang')
         .where('nama', isGreaterThanOrEqualTo: keyword)
         .snapshots();
-    update(); // Update the stream to reflect changes
+    update();
   }
 
   void deleteData(String docID) {
@@ -67,72 +62,128 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> getImage(bool gallery) async {
-    final picker = ImagePicker();
-    XFile? pickedFile;
-
-    if (gallery) {
-      pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    } else {
-      pickedFile = await picker.pickImage(source: ImageSource.camera);
-    }
-
-    if (pickedFile != null) {
-      image.value = pickedFile;
-    }
-  }
-
   Future<void> logout() async {
     await _auth.signOut();
     Get.offAllNamed(Routes.LOGIN);
   }
 
-  void getUserData() async {
-    final user = _auth.currentUser;
-    if (user != null) {
-      final userData = await _firestore.collection('users').doc(user.uid).get();
-      if (userData.exists) {
-        nameController.text = userData['name'] ?? '';
-        addressController.text = userData['address'] ?? '';
-        phoneController.text = userData['phone'] ?? '';
+// ====================== Controller untuk Tab Penjualan ============================
+
+  void tambahPenjualan(
+      String nama, int quantity, int hargaSatuan, int totalHargaBarang) async {
+    var isExist = await _firestore
+        .collection('penjualan')
+        .where('nama', isEqualTo: nama)
+        .get();
+    try {
+      if (isExist.size == 1) {
+        Get.defaultDialog(
+            title: 'Error',
+            middleText: 'Barang telah ada di penjualan',
+            textCancel: 'Oke');
+      } else {
+        await _firestore.collection('penjualan').add({
+          'nama': nama,
+          'quantity': quantity,
+          'harga_satuan': hargaSatuan,
+          'total_harga_barang': totalHargaBarang,
+        });
       }
+    } catch (e) {
+      print(e);
     }
   }
 
-  Future<void> updateUserData() async {
-    final user = _auth.currentUser;
-    if (user != null) {
-      try {
-        await _firestore.collection('users').doc(user.uid).set({
-          'name': nameController.text.trim(),
-          'address': addressController.text.trim(),
-          'phone': phoneController.text.trim(),
-        }, SetOptions(merge: true));
-        Get.snackbar(
-          'Success',
-          'User data updated successfully',
-          snackPosition: SnackPosition.BOTTOM,
-          duration: const Duration(seconds: 2),
-          margin: const EdgeInsets.all(12),
-        );
-      } catch (e) {
-        print('Error updating user data: $e');
-        Get.snackbar(
-          'Error',
-          'Failed to update user data',
-          snackPosition: SnackPosition.BOTTOM,
-          duration: const Duration(seconds: 2),
-          margin: const EdgeInsets.all(12),
-        );
-      }
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamDataPenjualan() {
+    CollectionReference<Map<String, dynamic>> data =
+        _firestore.collection('penjualan');
+    return data.orderBy('nama').snapshots();
+  }
+
+  void deleteDataPenjualan(String docID) {
+    try {
+      Get.defaultDialog(
+          title: "Delete Barang",
+          middleText: "Yakin menghapus barang ini?",
+          onConfirm: () {
+            _firestore.collection('penjualan').doc(docID).delete();
+            Get.back();
+            Get.snackbar(
+              'Success',
+              'Data deleted successfully',
+              snackPosition: SnackPosition.BOTTOM,
+              duration: const Duration(seconds: 2),
+              margin: const EdgeInsets.all(12),
+            );
+          },
+          textConfirm: "Yes, I'm sure",
+          textCancel: "No");
+    } catch (e) {
+      print(e);
+      Get.snackbar(
+        'Error',
+        'Cannot delete this Barang',
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 2),
+        margin: const EdgeInsets.all(12),
+      );
     }
+  }
+
+  void updateJumlah(String docID, int quantity) async {
+    try {
+      await _firestore.collection('penjualan').doc(docID).update({
+        'quantity': quantity,
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void updateHarga(String docId, int hargaBarang) async {
+    try {
+      await _firestore.collection('penjualan').doc(docId).update({
+        'total_harga_barang': hargaBarang,
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  late TextEditingController namaPelangganController;
+  void submitPenjualan() {
+    Get.defaultDialog(
+      title: 'Konfirmasi Nama Pelanggan',
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(padding: EdgeInsets.only(bottom: 5)),
+          TextField(
+            controller: namaPelangganController,
+            decoration: const InputDecoration(
+              enabledBorder: UnderlineInputBorder(),
+              labelText: 'Masukkan nama pelanggan',
+            ),
+          ),
+          const Padding(padding: EdgeInsets.only(bottom: 15))
+        ],
+      ),
+      onConfirm: () {},
+      textConfirm: 'Lanjutkan',
+      textCancel: 'Batal',
+      radius: 20,
+    );
+  }
+
+  @override
+  void onReady() {
+    namaPelangganController = TextEditingController();
+    super.onReady();
   }
 
   @override
   void onClose() {
-    nameController.dispose();
-    addressController.dispose();
-    phoneController.dispose();
+    namaPelangganController.dispose();
     super.onClose();
   }
 }
