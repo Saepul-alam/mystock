@@ -97,7 +97,7 @@ class HomeController extends GetxController {
   Stream<QuerySnapshot<Map<String, dynamic>>> streamDataPenjualan() {
     CollectionReference<Map<String, dynamic>> data =
         _firestore.collection('penjualan');
-    return data.snapshots();
+    return data.orderBy('nama').snapshots();
   }
 
   void deleteDataPenjualan(String docID) {
