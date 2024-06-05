@@ -163,15 +163,15 @@ class RegisterView extends GetView<RegisterController> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 48),
-                      TabBar(
-                        indicatorColor: Colors.green[900],
-                        tabs: [
-                          Tab(text: 'Stock'),
-                          Tab(text: 'Penjualan'),
-                          Tab(text: 'Riwayat'),
-                        ],
-                      ),
+                      // SizedBox(height: 48),
+                      // TabBar(
+                      //   indicatorColor: Colors.green[900],
+                      //   tabs: [
+                      //     Tab(text: 'Stock'),
+                      //     Tab(text: 'Penjualan'),
+                      //     Tab(text: 'Riwayat'),
+                      //   ],
+                      // ),
 
                       // Row(
                       //   mainAxisAlignment: MainAxisAlignment.center,
