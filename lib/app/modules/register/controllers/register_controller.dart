@@ -10,7 +10,7 @@ class RegisterController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
-  bool obscureText = true;
+  // bool obscureText = true;
 
   void register(
     String email,
@@ -95,9 +95,9 @@ class RegisterController extends GetxController {
     }
   }
 
-  void togglePasswordVisibility(){
-    obscureText = !obscureText;
-  }
+  // void togglePasswordVisibility(){
+  //   obscureText = !obscureText;
+  // }
 
   @override
   void onClose() {
