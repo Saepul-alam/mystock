@@ -10,6 +10,7 @@ class RegisterController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
+  bool obscureText = true;
 
   void register(
     String email,
@@ -92,6 +93,10 @@ class RegisterController extends GetxController {
     } catch (e) {
       print('Error saving user info: $e');
     }
+  }
+
+  void togglePasswordVisibility(){
+    obscureText = !obscureText;
   }
 
   @override

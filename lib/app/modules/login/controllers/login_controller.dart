@@ -7,6 +7,7 @@ class LoginController extends GetxController {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
+  // bool obscureText = true;
 
   Stream<User?> get streamAuthStatus =>
       FirebaseAuth.instance.authStateChanges();
@@ -67,6 +68,10 @@ class LoginController extends GetxController {
       print(e);
     }
   }
+
+  // void togglePasswordVisibility() {
+  //   obscureText = !obscureText;
+  // }
 
   @override
   void onClose() {

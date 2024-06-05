@@ -3,7 +3,30 @@ import 'package:get/get.dart';
 import 'package:mystock/app/modules/register/controllers/register_controller.dart';
 import 'package:mystock/app/routes/app_pages.dart';
 
-class RegisterView extends GetView<RegisterController> {
+class RegisterView extends StatefulWidget {
+  const RegisterView({Key? key}) : super(key: key);
+
+  @override
+  _RegisterViewState createState() => _RegisterViewState();
+}
+
+class _RegisterViewState extends State<RegisterView> {
+  final RegisterController controller = Get.put(RegisterController());
+  bool _obscureText = true;
+  bool __obscureText = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
+  void _togglePasswordVisibilityconfirm() {
+    setState(() {
+      __obscureText = !__obscureText;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -110,11 +133,19 @@ class RegisterView extends GetView<RegisterController> {
                             ),
                             SizedBox(height: 5),
                             TextField(
-                              obscureText: true,
                               controller: controller.passwordController,
+                              obscureText: _obscureText,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10)),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _obscureText
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                  onPressed: _togglePasswordVisibility,
+                                ),
                               ),
                             ),
                           ],
@@ -133,11 +164,19 @@ class RegisterView extends GetView<RegisterController> {
                             ),
                             SizedBox(height: 5),
                             TextField(
-                              obscureText: true,
                               controller: controller.confirmPasswordController,
+                              obscureText: __obscureText,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10)),
+                                suffixIcon: IconButton(
+                                  // onPressed: () =>
+                                  //     controller.togglePasswordVisibility(),
+                                  icon: Icon(__obscureText
+                                      ? Icons.visibility
+                                      : Icons.visibility_off),
+                                  onPressed: _togglePasswordVisibilityconfirm,
+                                ),
                               ),
                             ),
                           ],

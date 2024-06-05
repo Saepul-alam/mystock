@@ -3,9 +3,28 @@ import 'package:mystock/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LoginView extends GetView<LoginController> {
-  const LoginView({super.key});
+class LoginView extends StatefulWidget {
+  const LoginView({Key? key}) : super(key: key);
+
   @override
+  _LoginViewState createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  final LoginController controller = Get.put(LoginController());
+  bool _obscureText = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
+// class LoginView extends GetView<LoginController> {
+//   const LoginView({super.key});
+  
+  @override
+  
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
@@ -83,13 +102,21 @@ class LoginView extends GetView<LoginController> {
                       ),
                       SizedBox(height: 5),
                       TextField(
-                        obscureText: true,
+                        obscureText: _obscureText,
                         controller: controller.passwordController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                           hintText: 'Enter your password',
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscureText
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: _togglePasswordVisibility,
+                          ),
                         ),
                       ),
                     ],
