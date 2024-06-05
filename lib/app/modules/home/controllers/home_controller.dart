@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../../routes/app_pages.dart';
 
@@ -173,6 +174,36 @@ class HomeController extends GetxController {
       textCancel: 'Batal',
       radius: 20,
     );
+  }
+
+  // ====================== Controller untuk Tab Riwayat ============================
+  final CollectionReference riwayatCollection =
+      FirebaseFirestore.instance.collection('riwayat');
+  final CollectionReference barangRiwayatCollection =
+      FirebaseFirestore.instance.collection('penjualan');
+
+  Future<DocumentSnapshot> getRiwayatById(String id) async {
+    return await riwayatCollection.doc(id).get();
+  }
+
+  // Mengambil daftar barang riwayat berdasarkan id riwayat dari Firebase
+  Stream<QuerySnapshot> getBarangRiwayat(String idRiwayat) {
+    return barangRiwayatCollection
+        .where('id_riwayat', isEqualTo: idRiwayat)
+        .snapshots();
+  }
+
+  String formatCurrency(int amount) {
+    final formatter =
+        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
+    return formatter.format(amount);
+  }
+
+  String formatDate(int tgl) {
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(tgl);
+    String formattedDate = DateFormat('dd MMMM yyyy', 'id_ID').format(dateTime);
+    // DateFormat('dd MMMM yyyy -', 'id_ID').add_jm().format(dateTime);
+    return formattedDate;
   }
 
   @override
