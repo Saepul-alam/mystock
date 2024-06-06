@@ -162,11 +162,16 @@ class HomeController extends GetxController {
         totalHarga = totalHarga + penjualan[i]['total_harga_barang'];
       }
 
+      DateTime now = DateTime.now();
+
+      // Mendapatkan Unix time dalam milidetik
+      int unixTimeMillis = now.millisecondsSinceEpoch;
       await _firestore.collection('riwayat').add({
         'pelanggan': pelanggan,
       }).then((DocumentReference doc) {
         _firestore.collection('riwayat').doc(doc.id).update({
           'total_harga': totalHarga,
+          'tanggal': unixTimeMillis,
           'id': doc.id,
         });
         for (int i = 0; i < penjualan.length; i++) {
@@ -193,15 +198,11 @@ class HomeController extends GetxController {
   final CollectionReference barangRiwayatCollection =
       FirebaseFirestore.instance.collection('penjualan');
 
-  Future<DocumentSnapshot> getRiwayatById(String id) async {
-    return await riwayatCollection.doc(id).get();
-  }
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  // Mengambil daftar barang riwayat berdasarkan id riwayat dari Firebase
-  Stream<QuerySnapshot> getBarangRiwayat(String idRiwayat) {
-    return barangRiwayatCollection
-        .where('id_riwayat', isEqualTo: idRiwayat)
-        .snapshots();
+  Stream<QuerySnapshot<Object?>> streamDataRiwayat() {
+    CollectionReference data = firestore.collection('riwayat');
+    return data.snapshots();
   }
 
   String formatCurrency(int amount) {
@@ -216,6 +217,13 @@ class HomeController extends GetxController {
     // DateFormat('dd MMMM yyyy -', 'id_ID').add_jm().format(dateTime);
     return formattedDate;
   }
+
+  // String formatDateJM(int tgl) {
+  //   DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(tgl);
+  //   String formattedDate =
+  //       DateFormat('dd MMMM yyyy -', 'id_ID').add_jm().format(dateTime);
+  //   return formattedDate;
+  // }
 
   @override
   void onReady() {

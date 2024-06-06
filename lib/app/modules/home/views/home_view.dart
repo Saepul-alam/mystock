@@ -504,7 +504,7 @@ class HomeView extends StatelessWidget {
                   // ========================== Tab Riwayat =============================
                   Container(
                       child: StreamBuilder<QuerySnapshot<Object?>>(
-                          stream: controller.streamData(),
+                          stream: controller.streamDataRiwayat(),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.active) {
@@ -518,7 +518,7 @@ class HomeView extends StatelessWidget {
                                       margin: const EdgeInsets.symmetric(
                                           vertical: 8.0, horizontal: 12.0),
                                       decoration: BoxDecoration(
-                                        color: Colors.green,
+                                        color: const Color(0xFF478755),
                                         borderRadius:
                                             BorderRadius.circular(3.0),
                                         boxShadow: [
@@ -533,35 +533,34 @@ class HomeView extends StatelessWidget {
                                       ),
 
                                       // ========================== ini di aktifkan nanti
-                                      // child: ListTile(
-
-                                      // onTap: () => Get.toNamed(
-                                      //     Routes.RIWAYAT_INFO,
-                                      //     arguments: document.id),
-                                      // title: Text(
-                                      //   document['pelanggan'],
-                                      //   style: TextStyle(
-                                      //       fontWeight: FontWeight.w500,
-                                      //       fontSize: 18,
-                                      //       color: Colors.white),
-                                      // ),
-                                      // subtitle: Text(
-                                      //   controller.formatCurrency(
-                                      //       document['total']),
-                                      //   style: TextStyle(
-                                      //       fontWeight: FontWeight.w500,
-                                      //       fontSize: 16,
-                                      //       color: Colors.white),
-                                      // ),
-                                      // trailing: Text(
-                                      //   controller
-                                      //       .formatDate(document['tgl']),
-                                      //   style: TextStyle(
-                                      //       fontWeight: FontWeight.w500,
-                                      //       fontSize: 16,
-                                      //       color: Colors.white),
-                                      // ),
-                                      // ),
+                                      child: ListTile(
+                                        onTap: () => Get.toNamed(
+                                            Routes.RIWAYAT_INFO,
+                                            arguments: document.id),
+                                        title: Text(
+                                          document['pelanggan'],
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 18,
+                                              color: Colors.white),
+                                        ),
+                                        subtitle: Text(
+                                          controller.formatCurrency(
+                                              document['total_harga']),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16,
+                                              color: Colors.white),
+                                        ),
+                                        trailing: Text(
+                                          controller
+                                              .formatDate(document['tanggal']),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16,
+                                              color: Colors.white),
+                                        ),
+                                      ),
                                     );
                                   },
                                 );
