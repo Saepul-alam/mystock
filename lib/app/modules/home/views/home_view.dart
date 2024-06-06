@@ -303,7 +303,7 @@ class HomeView extends StatelessWidget {
                                                     ),
                                                   ),
                                                   Text(
-                                                    "Harga Barang: ${data[index]['harga_satuan']}"
+                                                    "Harga Barang: ${data[index]['total_harga_barang']}"
                                                         .toString(),
                                                     style: const TextStyle(
                                                       color: Colors.white,
@@ -450,7 +450,34 @@ class HomeView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20)),
                         child: InkWell(
                           onTap: () {
-                            controller.submitPenjualan();
+                            Get.defaultDialog(
+                              title: 'Konfirmasi Nama Pelanggan',
+                              content: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Padding(
+                                      padding: EdgeInsets.only(bottom: 5)),
+                                  TextField(
+                                    controller:
+                                        controller.namaPelangganController,
+                                    decoration: const InputDecoration(
+                                      enabledBorder: UnderlineInputBorder(),
+                                      labelText: 'Masukkan nama pelanggan',
+                                    ),
+                                  ),
+                                  const Padding(
+                                      padding: EdgeInsets.only(bottom: 15))
+                                ],
+                              ),
+                              onConfirm: () {
+                                controller.konfirmasiPenjualan(
+                                    controller.namaPelangganController.text);
+                                Get.back();
+                              },
+                              textConfirm: 'Lanjutkan',
+                              textCancel: 'Batal',
+                              radius: 20,
+                            );
                           },
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(20),

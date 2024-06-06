@@ -16,6 +16,6 @@ void main() async {
     debugShowCheckedModeBanner: false,
     initialRoute: AppPages.INITIAL,
     getPages: AppPages.routes,
-    initialBinding: SplashBinding(),
+    // initialBinding: SplashBinding(),
   ));
 }
