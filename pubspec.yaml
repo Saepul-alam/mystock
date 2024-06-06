@@ -1,0 +1,26 @@
+name: mystock
+version: 1.0.0+1
+publish_to: none
+description: A new Flutter project.
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  cupertino_icons: ^1.0.2
+  firebase_core: ^2.27.0
+  get: 4.6.6
+  flutter:
+    sdk: flutter
+  get_storage: ^2.1.1
+  firebase_auth: ^4.17.8
+  cloud_firestore: ^4.15.8
+
+dev_dependencies:
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  assets:
+    - assets/images/
+  uses-material-design: true
