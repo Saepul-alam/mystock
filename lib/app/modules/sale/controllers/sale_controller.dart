@@ -3,71 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../routes/app_pages.dart';
-
-class HomeController extends GetxController {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+class SaleController extends GetxController {
+  final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  //TODO: Implement SaleController
 
-// ================================= Controller untuk Tab Stock Barang ==================================
-
-  late Stream<QuerySnapshot<Map<String, dynamic>>> streamData;
+  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
-    streamData = _streamData();
   }
-
-  Stream<QuerySnapshot<Map<String, dynamic>>> _streamData() {
-    CollectionReference<Map<String, dynamic>> data =
-        _firestore.collection('barang');
-    return data.orderBy('nama', descending: false).snapshots();
-  }
-
-  void search(String keyword) {
-    streamData = FirebaseFirestore.instance
-        .collection('barang')
-        .where('nama', isGreaterThanOrEqualTo: keyword)
-        .snapshots();
-    update();
-  }
-
-  void deleteData(String docID) {
-    try {
-      Get.defaultDialog(
-          title: "Delete Barang",
-          middleText: "Are you sure you want to delete this Barang?",
-          onConfirm: () {
-            _firestore.collection('barang').doc(docID).delete();
-            Get.back();
-            Get.snackbar(
-              'Success',
-              'Data deleted successfully',
-              snackPosition: SnackPosition.BOTTOM,
-              duration: const Duration(seconds: 2),
-              margin: const EdgeInsets.all(12),
-            );
-          },
-          textConfirm: "Yes, I'm sure",
-          textCancel: "No");
-    } catch (e) {
-      print(e);
-      Get.snackbar(
-        'Error',
-        'Cannot delete this Barang',
-        snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 2),
-        margin: const EdgeInsets.all(12),
-      );
-    }
-  }
-
-  Future<void> logout() async {
-    await _auth.signOut();
-    Get.offAllNamed(Routes.LOGIN);
-  }
-
-// ====================== Controller untuk Tab Penjualan ============================
 
   void tambahPenjualan(
       String nama, int quantity, int hargaSatuan, int totalHargaBarang) async {
@@ -175,7 +120,18 @@ class HomeController extends GetxController {
     );
   }
 
-  @override
+  // @override
+  // void onReady() {
+  //   super.onReady();
+  // }
+
+  // @override
+  // void onClose() {
+  //   super.onClose();
+  // }
+
+  // void increment() => count.value++;
+    @override
   void onReady() {
     namaPelangganController = TextEditingController();
     super.onReady();
@@ -186,4 +142,5 @@ class HomeController extends GetxController {
     namaPelangganController.dispose();
     super.onClose();
   }
+
 }
