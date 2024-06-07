@@ -10,9 +10,9 @@ class HomeController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-// ================================= Controller untuk Tab Stock Barang ==================================
-
   late Stream<QuerySnapshot<Map<String, dynamic>>> _streamData;
+  RxString searchQuery = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -20,37 +20,44 @@ class HomeController extends GetxController {
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> streamData() {
-    CollectionReference<Map<String, dynamic>> data =
-        _firestore.collection('barang');
-    return data.orderBy('nama', descending: false).snapshots();
+    return _firestore
+        .collection('barang')
+        .orderBy('nama', descending: false)
+        .snapshots();
   }
 
-  void search(String keyword) {
-    _streamData = FirebaseFirestore.instance
-        .collection('barang')
-        .where('nama', isGreaterThanOrEqualTo: keyword)
-        .snapshots();
-    update();
+  Stream<QuerySnapshot<Map<String, dynamic>>> search(String query) {
+    searchQuery.value = query;
+    if (query.isEmpty) {
+      return streamData();
+    } else {
+      return _firestore
+          .collection('barang')
+          .where('nama', isGreaterThanOrEqualTo: query)
+          .where('nama', isLessThanOrEqualTo: query + '\uf8ff')
+          .snapshots();
+    }
   }
 
   void deleteData(String docID) {
     try {
       Get.defaultDialog(
-          title: "Delete Barang",
-          middleText: "Are you sure you want to delete this Barang?",
-          onConfirm: () {
-            _firestore.collection('barang').doc(docID).delete();
-            Get.back();
-            Get.snackbar(
-              'Success',
-              'Data deleted successfully',
-              snackPosition: SnackPosition.BOTTOM,
-              duration: const Duration(seconds: 2),
-              margin: const EdgeInsets.all(12),
-            );
-          },
-          textConfirm: "Yes, I'm sure",
-          textCancel: "No");
+        title: "Delete Barang",
+        middleText: "Are you sure you want to delete this Barang?",
+        onConfirm: () {
+          _firestore.collection('barang').doc(docID).delete();
+          Get.back();
+          Get.snackbar(
+            'Success',
+            'Data deleted successfully',
+            snackPosition: SnackPosition.BOTTOM,
+            duration: const Duration(seconds: 2),
+            margin: const EdgeInsets.all(12),
+          );
+        },
+        textConfirm: "Yes, I'm sure",
+        textCancel: "No",
+      );
     } catch (e) {
       print(e);
       Get.snackbar(
@@ -68,10 +75,12 @@ class HomeController extends GetxController {
     Get.offAllNamed(Routes.LOGIN);
   }
 
-// ====================== Controller untuk Tab Penjualan ============================
-
   void tambahPenjualan(
-      String nama, int quantity, int hargaSatuan, int totalHargaBarang) async {
+    String nama,
+    int quantity,
+    int hargaSatuan,
+    int totalHargaBarang,
+  ) async {
     var isExist = await _firestore
         .collection('penjualan')
         .where('nama', isEqualTo: nama)
@@ -79,9 +88,10 @@ class HomeController extends GetxController {
     try {
       if (isExist.size == 1) {
         Get.defaultDialog(
-            title: 'Error',
-            middleText: 'Barang telah ada di penjualan',
-            textCancel: 'Oke');
+          title: 'Error',
+          middleText: 'Barang telah ada di penjualan',
+          textCancel: 'Oke',
+        );
       } else {
         await _firestore.collection('penjualan').add({
           'nama': nama,
@@ -96,29 +106,28 @@ class HomeController extends GetxController {
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> streamDataPenjualan() {
-    CollectionReference<Map<String, dynamic>> data =
-        _firestore.collection('penjualan');
-    return data.orderBy('nama').snapshots();
+    return _firestore.collection('penjualan').orderBy('nama').snapshots();
   }
 
   void deleteDataPenjualan(String docID) {
     try {
       Get.defaultDialog(
-          title: "Delete Barang",
-          middleText: "Yakin menghapus barang ini?",
-          onConfirm: () {
-            _firestore.collection('penjualan').doc(docID).delete();
-            Get.back();
-            Get.snackbar(
-              'Success',
-              'Data deleted successfully',
-              snackPosition: SnackPosition.BOTTOM,
-              duration: const Duration(seconds: 2),
-              margin: const EdgeInsets.all(12),
-            );
-          },
-          textConfirm: "Yes, I'm sure",
-          textCancel: "No");
+        title: "Delete Barang",
+        middleText: "Yakin menghapus barang ini?",
+        onConfirm: () {
+          _firestore.collection('penjualan').doc(docID).delete();
+          Get.back();
+          Get.snackbar(
+            'Success',
+            'Data deleted successfully',
+            snackPosition: SnackPosition.BOTTOM,
+            duration: const Duration(seconds: 2),
+            margin: const EdgeInsets.all(12),
+          );
+        },
+        textConfirm: "Yes, I'm sure",
+        textCancel: "No",
+      );
     } catch (e) {
       print(e);
       Get.snackbar(

@@ -55,8 +55,7 @@ class HomeView extends StatelessWidget {
               SizedBox(
                 height: 700,
                 child: TabBarView(children: [
-//  =============================== Tab Stok Barang ================================
-
+                  // Tab Stock Barang
                   Column(
                     children: [
                       Padding(
@@ -71,131 +70,149 @@ class HomeView extends StatelessWidget {
                             ),
                           ),
                           onChanged: (value) {
-                            controller.search(
-                                value); // Call search function on controller
+                            controller.search(value);
                           },
                         ),
                       ),
                       SizedBox(
                         height: 500,
-                        child: StreamBuilder<QuerySnapshot>(
-                          stream: controller.streamData(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            } else if (snapshot.hasError) {
-                              return const Center(
-                                child: Text(
-                                  'Error fetching data',
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              );
-                            } else if (!snapshot.hasData ||
-                                snapshot.data!.docs.isEmpty) {
-                              return const Center(
-                                child: Text(
-                                  'No data',
-                                  style: TextStyle(color: Colors.blue),
-                                ),
-                              );
-                            } else {
-                              var data = snapshot.data!.docs;
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: data.length,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      color: const Color(
-                                          0xFF478755), // Background color green
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 4.0, horizontal: 8.0),
-                                    child: ListTile(
-                                      title: Text(
-                                        data[index]['nama'],
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                        child: Obx(() {
+                          return StreamBuilder<QuerySnapshot>(
+                            stream: controller.searchQuery.isEmpty
+                                ? controller.streamData()
+                                : controller
+                                    .search(controller.searchQuery.value),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else if (snapshot.hasError) {
+                                return const Center(
+                                  child: Text(
+                                    'Error fetching data',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                );
+                              } else if (!snapshot.hasData ||
+                                  snapshot.data!.docs.isEmpty) {
+                                return const Center(
+                                  child: Text(
+                                    'No data',
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                );
+                              } else {
+                                var data = snapshot.data!.docs;
+                                return ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: data.length,
+                                  itemBuilder: (context, index) {
+                                    var doc = data[index];
+
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF478755),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
                                       ),
-                                      subtitle: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Stock: ${data[index]['stock']}',
-                                            style: const TextStyle(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 4.0, horizontal: 8.0),
+                                      child: ListTile(
+                                        title: Text(
+                                          doc['nama'],
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        subtitle: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Stock: ${doc['stock']}',
+                                              style: const TextStyle(
                                                 color: Color.fromARGB(
-                                                    221, 247, 255, 183)),
-                                          ),
-                                          Text(
-                                            'Harga: ${data[index]['harga']}',
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              ElevatedButton(
-                                                onPressed: () => Get.toNamed(
-                                                    Routes.UPDATE,
-                                                    arguments: data[index].id),
-                                                style: ElevatedButton.styleFrom(
-                                                  foregroundColor: Colors.white,
-                                                  backgroundColor: Colors
-                                                      .green, // Text color white
-                                                ),
-                                                child: const Text(
-                                                  'Edit',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
+                                                    221, 255, 244, 143),
                                               ),
-                                              const SizedBox(width: 8),
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  int hargaSatuan = int.parse(
-                                                      data[index]['harga']);
-                                                  int totalHargaBarang =
-                                                      hargaSatuan * 1;
-                                                  controller.tambahPenjualan(
-                                                      data[index]['nama'],
-                                                      1,
-                                                      hargaSatuan,
-                                                      totalHargaBarang);
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  foregroundColor: Colors.white,
-                                                  backgroundColor: Colors
-                                                      .green, // Text color white
-                                                ),
-                                                child: const Text(
-                                                  'Penjualan',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
+                                            ),
+                                            Text(
+                                              'Harga: ${doc['harga']}',
+                                              style: const TextStyle(
+                                                color: Color.fromARGB(
+                                                    221, 247, 255, 248),
                                               ),
-                                            ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                ElevatedButton(
+                                                  onPressed: () => Get.toNamed(
+                                                      Routes.UPDATE,
+                                                      arguments:
+                                                          data[index].id),
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    foregroundColor:
+                                                        Colors.white,
+                                                    backgroundColor: Colors
+                                                        .green, // Text color white
+                                                  ),
+                                                  child: const Text(
+                                                    'Edit',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    int hargaSatuan = int.parse(
+                                                        data[index]['harga']);
+                                                    int totalHargaBarang =
+                                                        hargaSatuan * 1;
+                                                    controller.tambahPenjualan(
+                                                        data[index]['nama'],
+                                                        1,
+                                                        hargaSatuan,
+                                                        totalHargaBarang);
+                                                  },
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    foregroundColor:
+                                                        Colors.white,
+                                                    backgroundColor: Colors
+                                                        .green, // Text color white
+                                                  ),
+                                                  child: const Text(
+                                                    'Penjualan',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        trailing: IconButton(
+                                          onPressed: () {
+                                            controller.deleteData(doc.id);
+                                          },
+                                          icon: const Icon(
+                                            Icons.delete_forever_rounded,
+                                            color: Colors.white,
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                      trailing: IconButton(
-                                        onPressed: () => controller
-                                            .deleteData(data[index].id),
-                                        icon: const Icon(Icons.delete),
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            }
-                          },
-                        ),
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                          );
+                        }),
                       ),
                       const Padding(padding: EdgeInsets.only(top: 40)),
                       Container(
@@ -205,8 +222,7 @@ class HomeView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20)),
                         child: InkWell(
                           onTap: () {
-                            Get.toNamed(Routes
-                                .CREATE); // Navigate to create input data page
+                            Get.toNamed(Routes.CREATE);
                           },
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(20),
@@ -276,6 +292,7 @@ class HomeView extends StatelessWidget {
                                         shrinkWrap: true,
                                         itemCount: data.length,
                                         itemBuilder: (context, index) {
+                                          var doc = data[index];
                                           return Container(
                                             decoration: BoxDecoration(
                                               color: const Color(0xFF478755),
@@ -286,7 +303,7 @@ class HomeView extends StatelessWidget {
                                                 vertical: 4.0, horizontal: 8.0),
                                             child: ListTile(
                                               title: Text(
-                                                data[index]['nama'],
+                                                doc['nama'],
                                                 style: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 18),
@@ -296,7 +313,7 @@ class HomeView extends StatelessWidget {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    "Jumlah: ${data[index]['quantity'].toString()}",
+                                                    "Jumlah: ${doc['quantity'].toString()}",
                                                     style: const TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 14,
@@ -316,31 +333,27 @@ class HomeView extends StatelessWidget {
                                                     children: [
                                                       ElevatedButton(
                                                         onPressed: () {
-                                                          int jumlah = data[
-                                                                      index]
-                                                                  ['quantity'] +
-                                                              1;
-                                                          int hargaBarang = data[
-                                                                      index][
-                                                                  'harga_satuan'] *
-                                                              jumlah;
+                                                          int jumlah =
+                                                              doc['quantity'] +
+                                                                  1;
+                                                          int hargaBarang =
+                                                              doc['harga_satuan'] *
+                                                                  jumlah;
                                                           controller
                                                               .updateHarga(
-                                                                  data[index]
-                                                                      .id,
+                                                                  doc.id,
                                                                   hargaBarang);
                                                           controller
                                                               .updateJumlah(
-                                                                  data[index]
-                                                                      .id,
+                                                                  doc.id,
                                                                   jumlah);
                                                         },
                                                         style: ElevatedButton
                                                             .styleFrom(
                                                           foregroundColor:
                                                               Colors.white,
-                                                          backgroundColor: Colors
-                                                              .green, // Text color white
+                                                          backgroundColor:
+                                                              Colors.green,
                                                         ),
                                                         child: const Text(
                                                           '+1',
@@ -353,14 +366,12 @@ class HomeView extends StatelessWidget {
                                                       const SizedBox(width: 8),
                                                       ElevatedButton(
                                                         onPressed: () {
-                                                          int jumlah = data[
-                                                                      index]
-                                                                  ['quantity'] -
-                                                              1;
-                                                          int hargaBarang = data[
-                                                                      index][
-                                                                  'harga_satuan'] *
-                                                              jumlah;
+                                                          int jumlah =
+                                                              doc['quantity'] -
+                                                                  1;
+                                                          int hargaBarang =
+                                                              doc['harga_satuan'] *
+                                                                  jumlah;
                                                           if (jumlah < 1) {
                                                             Get.defaultDialog(
                                                                 title: 'Error',
@@ -371,13 +382,11 @@ class HomeView extends StatelessWidget {
                                                           } else {
                                                             controller
                                                                 .updateJumlah(
-                                                                    data[index]
-                                                                        .id,
+                                                                    doc.id,
                                                                     jumlah);
                                                             controller
                                                                 .updateHarga(
-                                                                    data[index]
-                                                                        .id,
+                                                                    doc.id,
                                                                     hargaBarang);
                                                           }
                                                         },
@@ -385,8 +394,8 @@ class HomeView extends StatelessWidget {
                                                             .styleFrom(
                                                           foregroundColor:
                                                               Colors.white,
-                                                          backgroundColor: Colors
-                                                              .green, // Text color white
+                                                          backgroundColor:
+                                                              Colors.green,
                                                         ),
                                                         child: const Text(
                                                           '-1',
@@ -403,7 +412,7 @@ class HomeView extends StatelessWidget {
                                               trailing: IconButton(
                                                 onPressed: () => controller
                                                     .deleteDataPenjualan(
-                                                        data[index].id),
+                                                        doc.id),
                                                 icon: const Icon(Icons.delete),
                                                 color: Colors.white,
                                               ),
