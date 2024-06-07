@@ -220,7 +220,31 @@ class SaleView extends GetView<SaleController> {
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: ElevatedButton(
               onPressed: () {
-                controller.submitPenjualan();
+                Get.defaultDialog(
+                  title: 'Konfirmasi Nama Pelanggan',
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(padding: EdgeInsets.only(bottom: 5)),
+                      TextField(
+                        controller: controller.namaPelangganController,
+                        decoration: const InputDecoration(
+                          enabledBorder: UnderlineInputBorder(),
+                          labelText: 'Masukkan nama pelanggan',
+                        ),
+                      ),
+                      const Padding(padding: EdgeInsets.only(bottom: 15))
+                    ],
+                  ),
+                  onConfirm: () {
+                    controller.konfirmasiPenjualan(
+                        controller.namaPelangganController.text);
+                    Get.back();
+                  },
+                  textConfirm: 'Lanjutkan',
+                  textCancel: 'Batal',
+                  radius: 20,
+                );
               },
               style: ElevatedButton.styleFrom(
                 primary: const Color(0xFF478755),

@@ -96,42 +96,47 @@ class SaleController extends GetxController {
   }
 
   late TextEditingController namaPelangganController;
-  void submitPenjualan() {
-    Get.defaultDialog(
-      title: 'Konfirmasi Nama Pelanggan',
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(padding: EdgeInsets.only(bottom: 5)),
-          TextField(
-            controller: namaPelangganController,
-            decoration: const InputDecoration(
-              enabledBorder: UnderlineInputBorder(),
-              labelText: 'Masukkan nama pelanggan',
-            ),
-          ),
-          const Padding(padding: EdgeInsets.only(bottom: 15))
-        ],
-      ),
-      onConfirm: () {},
-      textConfirm: 'Lanjutkan',
-      textCancel: 'Batal',
-      radius: 20,
-    );
+  void konfirmasiPenjualan(String pelanggan) async {
+    try {
+      var penjualanQuery = await _firestore.collection('penjualan').get();
+      var penjualan = penjualanQuery.docs;
+      num totalHarga = 0;
+
+      for (int i = 0; i < penjualan.length; i++) {
+        totalHarga = totalHarga + penjualan[i]['total_harga_barang'];
+      }
+
+      DateTime now = DateTime.now();
+
+      // Mendapatkan Unix time dalam milidetik
+      int unixTimeMillis = now.millisecondsSinceEpoch;
+      await _firestore.collection('riwayat').add({
+        'pelanggan': pelanggan,
+      }).then((DocumentReference doc) {
+        _firestore.collection('riwayat').doc(doc.id).update({
+          'total_harga': totalHarga,
+          'tanggal': unixTimeMillis,
+          'id': doc.id,
+        });
+        for (int i = 0; i < penjualan.length; i++) {
+          _firestore
+              .collection('riwayat')
+              .doc(doc.id)
+              .collection('barang_riwayat')
+              .add({
+            'nama': penjualan[i]['nama'],
+            'quantity': penjualan[i]['quantity'],
+            'harga_satuan': penjualan[i]['harga_satuan'],
+            'total_harga_barang': penjualan[i]['total_harga_barang'],
+          });
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
-  // @override
-  // void onReady() {
-  //   super.onReady();
-  // }
-
-  // @override
-  // void onClose() {
-  //   super.onClose();
-  // }
-
-  // void increment() => count.value++;
-    @override
+  @override
   void onReady() {
     namaPelangganController = TextEditingController();
     super.onReady();
@@ -142,5 +147,4 @@ class SaleController extends GetxController {
     namaPelangganController.dispose();
     super.onClose();
   }
-
 }
