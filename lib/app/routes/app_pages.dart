@@ -1,10 +1,7 @@
 import 'package:get/get.dart';
 
-import 'package:mystock/app/modules/create/bindings/create_binding.dart';
-import 'package:mystock/app/modules/create/views/create_view.dart';
-import 'package:mystock/app/modules/update/bindings/update_binding.dart';
-import 'package:mystock/app/modules/update/views/update_view.dart';
-
+import '../modules/create/bindings/create_binding.dart';
+import '../modules/create/views/create_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
@@ -13,15 +10,19 @@ import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/reset_password/bindings/reset_password_binding.dart';
 import '../modules/reset_password/views/reset_password_view.dart';
+import '../modules/riwayat_info/bindings/riwayat_info_binding.dart';
+import '../modules/riwayat_info/views/riwayat_info_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
+import '../modules/update/bindings/update_binding.dart';
+import '../modules/update/views/update_view.dart';
 
 part 'app_routes.dart';
 
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.SPLASH;
+  static const INITIAL = Routes.HOME;
 
   static final routes = [
     GetPage(
@@ -59,6 +60,11 @@ class AppPages {
       name: _Paths.UPDATE,
       page: () => UpdateView(),
       binding: UpdateBinding(),
+    ),
+    GetPage(
+      name: _Paths.RIWAYAT_INFO,
+      page: () => const RiwayatInfoView(),
+      binding: RiwayatInfoBinding(),
     ),
   ];
 }

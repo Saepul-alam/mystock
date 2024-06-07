@@ -10,6 +10,7 @@ abstract class Routes {
   static const SPLASH = _Paths.SPLASH;
   static const CREATE = _Paths.CREATE;
   static const UPDATE = _Paths.UPDATE;
+  static const RIWAYAT_INFO = _Paths.RIWAYAT_INFO;
 }
 
 abstract class _Paths {
@@ -21,4 +22,5 @@ abstract class _Paths {
   static const SPLASH = '/splash';
   static const CREATE = '/create';
   static const UPDATE = '/update';
+  static const RIWAYAT_INFO = '/riwayat-info';
 }
