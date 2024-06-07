@@ -9,8 +9,7 @@ class SaleView extends GetView<SaleController> {
   const SaleView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-     final SaleController controller = Get.put(SaleController());
-    TextEditingController searchController = TextEditingController();
+    final SaleController controller = Get.put(SaleController());
     return Scaffold(
       // appBar: AppBar(
       //   title: const Text('SaleView'),
@@ -189,24 +188,51 @@ class SaleView extends GetView<SaleController> {
                   }
                 }),
           ),
-          Container(
-            width: 400,
-            decoration: BoxDecoration(
-                color: const Color(0xFF478755),
-                borderRadius: BorderRadius.circular(20)),
-            child: InkWell(
-              onTap: () {
+          // Container(
+          //   width: 400,
+          //   decoration: BoxDecoration(
+          //       color: const Color(0xFF478755),
+          //       borderRadius: BorderRadius.circular(20)),
+          //   child: InkWell(
+          //     onTap: () {
+          //       controller.submitPenjualan();
+          //     },
+          //     borderRadius: const BorderRadius.only(
+          //       topLeft: Radius.circular(20),
+          //       topRight: Radius.circular(20),
+          //     ),
+          //     child: const Padding(
+          //       padding: EdgeInsets.symmetric(vertical: 12.0),
+          //       child: Center(
+          //         child: Text(
+          //           'Jual Barang',
+          //           style: TextStyle(
+          //             color: Colors.white,
+          //             fontSize: 16.0,
+          //             fontWeight: FontWeight.bold,
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: ElevatedButton(
+              onPressed: () {
                 controller.submitPenjualan();
               },
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
+              style: ElevatedButton.styleFrom(
+                primary: const Color(0xFF478755),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
               child: const Padding(
                 padding: EdgeInsets.symmetric(vertical: 12.0),
                 child: Center(
                   child: Text(
-                    'Jual Barang',
+                    'Jual',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16.0,
@@ -217,6 +243,7 @@ class SaleView extends GetView<SaleController> {
               ),
             ),
           ),
+          const Padding(padding: EdgeInsets.only(bottom: 3)),
         ],
       ),
     );

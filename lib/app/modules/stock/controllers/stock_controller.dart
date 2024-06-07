@@ -10,21 +10,21 @@ class StockController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   //TODO: Implement StockController
 
-    late Stream<QuerySnapshot<Map<String, dynamic>>> _streamData;
+    late Stream<QuerySnapshot<Map<String, dynamic>>> streamData;
   @override
   void onInit() {
     super.onInit();
-    _streamData = streamData();
+    streamData = _streamData();
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> streamData() {
+  Stream<QuerySnapshot<Map<String, dynamic>>> _streamData() {
     CollectionReference<Map<String, dynamic>> data =
         _firestore.collection('barang');
     return data.orderBy('nama', descending: false).snapshots();
   }
 
   void search(String keyword) {
-    _streamData = FirebaseFirestore.instance
+    streamData = FirebaseFirestore.instance
         .collection('barang')
         .where('nama', isGreaterThanOrEqualTo: keyword)
         .snapshots();

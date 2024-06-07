@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SaleController extends GetxController {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   //TODO: Implement SaleController
 
@@ -120,15 +120,27 @@ class SaleController extends GetxController {
     );
   }
 
-  @override
+  // @override
+  // void onReady() {
+  //   super.onReady();
+  // }
+
+  // @override
+  // void onClose() {
+  //   super.onClose();
+  // }
+
+  // void increment() => count.value++;
+    @override
   void onReady() {
+    namaPelangganController = TextEditingController();
     super.onReady();
   }
 
   @override
   void onClose() {
+    namaPelangganController.dispose();
     super.onClose();
   }
 
-  void increment() => count.value++;
 }
