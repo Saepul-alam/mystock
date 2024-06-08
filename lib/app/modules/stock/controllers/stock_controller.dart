@@ -10,7 +10,8 @@ class StockController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   //TODO: Implement StockController
 
-    late Stream<QuerySnapshot<Map<String, dynamic>>> streamData;
+  late Stream<QuerySnapshot<Map<String, dynamic>>> streamData;
+  RxString searchQuery = ''.obs;
   @override
   void onInit() {
     super.onInit();
@@ -23,12 +24,17 @@ class StockController extends GetxController {
     return data.orderBy('nama', descending: false).snapshots();
   }
 
-  void search(String keyword) {
-    streamData = FirebaseFirestore.instance
-        .collection('barang')
-        .where('nama', isGreaterThanOrEqualTo: keyword)
-        .snapshots();
-    update();
+  Stream<QuerySnapshot<Map<String, dynamic>>> search(String query) {
+    searchQuery.value = query;
+    if (query.isEmpty) {
+      return _streamData();
+    } else {
+      return _firestore
+          .collection('barang')
+          .where('nama', isGreaterThanOrEqualTo: query)
+          .where('nama', isLessThanOrEqualTo: query + '\uf8ff')
+          .snapshots();
+    }
   }
 
   void deleteData(String docID) {
