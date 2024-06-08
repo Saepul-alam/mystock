@@ -67,8 +67,8 @@ class StockController extends GetxController {
     }
   }
 
-  void tambahPenjualan(
-      String nama, int quantity, int hargaSatuan, int totalHargaBarang) async {
+  void tambahPenjualan(String nama, int quantity, int hargaSatuan,
+      int totalHargaBarang, String idBarang, int stock) async {
     var isExist = await _firestore
         .collection('penjualan')
         .where('nama', isEqualTo: nama)
@@ -80,11 +80,13 @@ class StockController extends GetxController {
             middleText: 'Barang telah ada di penjualan',
             textCancel: 'Oke');
       } else {
-        await _firestore.collection('penjualan').add({
+        await _firestore.collection('penjualan').doc(idBarang).set({
           'nama': nama,
           'quantity': quantity,
           'harga_satuan': hargaSatuan,
           'total_harga_barang': totalHargaBarang,
+          'id_barang': idBarang,
+          'stock_awal': stock,
         });
       }
     } catch (e) {

@@ -5,17 +5,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CreateController extends GetxController {
   late TextEditingController namaController;
   late TextEditingController stockController;
-  late TextEditingController hargaController; // Add this line
+  late TextEditingController hargaController;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  void addData(String nama, String stock, String harga) async {
+  void addData(String nama, int stock, String harga) async {
     try {
       String dateNow = DateTime.now().toString();
       await firestore.collection('barang').add({
         'nama': nama,
         'stock': stock,
-        'harga': harga, // Include harga in Firestore data
+        'harga': harga,
         'time': dateNow
+      }).then((DocumentReference doc) {
+        firestore.collection('barang').doc(doc.id).update({
+          'id_barang': doc.id,
+        });
       });
 
       Get.back();

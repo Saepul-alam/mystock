@@ -98,6 +98,7 @@ class SaleController extends GetxController {
   late TextEditingController namaPelangganController;
   void konfirmasiPenjualan(String pelanggan) async {
     try {
+      int i = 0;
       var penjualanQuery = await _firestore.collection('penjualan').get();
       var penjualan = penjualanQuery.docs;
       num totalHarga = 0;
@@ -118,7 +119,7 @@ class SaleController extends GetxController {
           'tanggal': unixTimeMillis,
           'id': doc.id,
         });
-        for (int i = 0; i < penjualan.length; i++) {
+        for (i = 0; i < penjualan.length; i++) {
           _firestore
               .collection('riwayat')
               .doc(doc.id)
@@ -129,6 +130,24 @@ class SaleController extends GetxController {
             'harga_satuan': penjualan[i]['harga_satuan'],
             'total_harga_barang': penjualan[i]['total_harga_barang'],
           });
+
+          _firestore
+              .collection('barang')
+              .doc(penjualan[i]['id_barang'])
+              .update({
+            'stock': penjualan[i]['stock_awal'] - penjualan[i]['quantity'],
+          }).then((value) {
+            for (var ds in penjualan) {
+              ds.reference.delete();
+            }
+          });
+
+          // _firestore
+          //     .collection('penjualan')
+          //     .doc(penjualan[i]['id_barang'])
+          //     .update({
+          //   'stock_awal': penjualan[i]['stock_awal'] - penjualan[i]['quantity']
+          // });
         }
       });
     } catch (e) {

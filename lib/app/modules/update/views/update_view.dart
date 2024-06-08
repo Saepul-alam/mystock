@@ -14,7 +14,7 @@ class UpdateView extends GetView<UpdateController> {
           if (snapshot.connectionState == ConnectionState.done) {
             var data = snapshot.data!;
             controller.namaController.text = data['nama'];
-            controller.stockController.text = data['stock'];
+            controller.stockController.text = data['stock'].toString();
             controller.hargaController.text = data['harga'];
             return Padding(
               padding: EdgeInsets.all(30),
@@ -89,7 +89,7 @@ class UpdateView extends GetView<UpdateController> {
                         controller.updateData(
                           Get.arguments,
                           controller.namaController.text,
-                          controller.stockController.text,
+                          int.parse(controller.stockController.text),
                           controller.hargaController.text,
                         );
                       },

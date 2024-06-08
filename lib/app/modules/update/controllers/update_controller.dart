@@ -13,7 +13,7 @@ class UpdateController extends GetxController {
     return docRef.get();
   }
 
-  void updateData(String docID, String nama, String stock, String harga) async {
+  void updateData(String docID, String nama, int stock, String harga) async {
     try {
       await firestore.collection('barang').doc(docID).update({
         'nama': nama,

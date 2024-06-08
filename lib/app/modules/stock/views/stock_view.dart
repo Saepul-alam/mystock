@@ -117,11 +117,16 @@ class StockView extends GetView<StockController> {
                                         int hargaSatuan =
                                             int.parse(data[index]['harga']);
                                         int totalHargaBarang = hargaSatuan * 1;
+                                        String idBarang =
+                                            data[index]['id_barang'];
+                                        int stock = data[index]['stock'];
                                         controller.tambahPenjualan(
                                             data[index]['nama'],
                                             1,
                                             hargaSatuan,
-                                            totalHargaBarang);
+                                            totalHargaBarang,
+                                            idBarang,
+                                            stock);
                                       },
                                       style: ElevatedButton.styleFrom(
                                         foregroundColor: Colors.white,
