@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mystock/app/modules/register/controllers/register_controller.dart';
-import 'package:mystock/app/routes/app_pages.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -38,25 +37,25 @@ class _RegisterViewState extends State<RegisterView> {
               'SRI REZEKI',
               style: TextStyle(color: Color(0xffffffff)),
             ),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  Get.toNamed(Routes.REGISTER);
-                },
-                icon: Row(
-                  children: [
-                    Icon(
-                      Icons.account_circle,
-                      color: Colors.white,
-                    ),
-                    Icon(
-                      Icons.add,
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            // actions: [
+            //   IconButton(
+            //     onPressed: () {
+            //       Get.toNamed(Routes.REGISTER);
+            //     },
+            //     icon: Row(
+            //       children: [
+            //         Icon(
+            //           Icons.account_circle,
+            //           color: Colors.white,
+            //         ),
+            //         Icon(
+            //           Icons.add,
+            //           color: Colors.white,
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ],
           ),
           body: Container(
             child: Stack(
@@ -191,7 +190,7 @@ class _RegisterViewState extends State<RegisterView> {
                             foregroundColor: Colors.white,
                             backgroundColor: Color(0xFF478755),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(20),
                             ),
                           ),
                           child: const Text('Register'),

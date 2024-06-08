@@ -81,7 +81,7 @@ class CreateView extends GetView<CreateController> {
                 onPressed: () {
                   controller.addData(
                     controller.namaController.text,
-                    controller.stockController.text,
+                    int.parse(controller.stockController.text),
                     controller.hargaController.text,
                   );
                 },

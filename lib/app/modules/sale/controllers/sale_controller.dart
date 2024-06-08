@@ -3,71 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../routes/app_pages.dart';
-
-class HomeController extends GetxController {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+class SaleController extends GetxController {
+  final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  //TODO: Implement SaleController
 
-// ================================= Controller untuk Tab Stock Barang ==================================
-
-  late Stream<QuerySnapshot<Map<String, dynamic>>> streamData;
+  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
-    streamData = _streamData();
   }
-
-  Stream<QuerySnapshot<Map<String, dynamic>>> _streamData() {
-    CollectionReference<Map<String, dynamic>> data =
-        _firestore.collection('barang');
-    return data.orderBy('nama', descending: false).snapshots();
-  }
-
-  void search(String keyword) {
-    streamData = FirebaseFirestore.instance
-        .collection('barang')
-        .where('nama', isGreaterThanOrEqualTo: keyword)
-        .snapshots();
-    update();
-  }
-
-  void deleteData(String docID) {
-    try {
-      Get.defaultDialog(
-          title: "Delete Barang",
-          middleText: "Are you sure you want to delete this Barang?",
-          onConfirm: () {
-            _firestore.collection('barang').doc(docID).delete();
-            Get.back();
-            Get.snackbar(
-              'Success',
-              'Data deleted successfully',
-              snackPosition: SnackPosition.BOTTOM,
-              duration: const Duration(seconds: 2),
-              margin: const EdgeInsets.all(12),
-            );
-          },
-          textConfirm: "Yes, I'm sure",
-          textCancel: "No");
-    } catch (e) {
-      print(e);
-      Get.snackbar(
-        'Error',
-        'Cannot delete this Barang',
-        snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 2),
-        margin: const EdgeInsets.all(12),
-      );
-    }
-  }
-
-  Future<void> logout() async {
-    await _auth.signOut();
-    Get.offAllNamed(Routes.LOGIN);
-  }
-
-// ====================== Controller untuk Tab Penjualan ============================
 
   void tambahPenjualan(
       String nama, int quantity, int hargaSatuan, int totalHargaBarang) async {
@@ -151,28 +96,63 @@ class HomeController extends GetxController {
   }
 
   late TextEditingController namaPelangganController;
-  void submitPenjualan() {
-    Get.defaultDialog(
-      title: 'Konfirmasi Nama Pelanggan',
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(padding: EdgeInsets.only(bottom: 5)),
-          TextField(
-            controller: namaPelangganController,
-            decoration: const InputDecoration(
-              enabledBorder: UnderlineInputBorder(),
-              labelText: 'Masukkan nama pelanggan',
-            ),
-          ),
-          const Padding(padding: EdgeInsets.only(bottom: 15))
-        ],
-      ),
-      onConfirm: () {},
-      textConfirm: 'Lanjutkan',
-      textCancel: 'Batal',
-      radius: 20,
-    );
+  void konfirmasiPenjualan(String pelanggan) async {
+    try {
+      int i = 0;
+      var penjualanQuery = await _firestore.collection('penjualan').get();
+      var penjualan = penjualanQuery.docs;
+      num totalHarga = 0;
+
+      for (int i = 0; i < penjualan.length; i++) {
+        totalHarga = totalHarga + penjualan[i]['total_harga_barang'];
+      }
+
+      DateTime now = DateTime.now();
+
+      // Mendapatkan Unix time dalam milidetik
+      int unixTimeMillis = now.millisecondsSinceEpoch;
+      await _firestore.collection('riwayat').add({
+        'pelanggan': pelanggan,
+      }).then((DocumentReference doc) {
+        _firestore.collection('riwayat').doc(doc.id).update({
+          'total_harga': totalHarga,
+          'tanggal': unixTimeMillis,
+          'id': doc.id,
+        });
+        for (i = 0; i < penjualan.length; i++) {
+          _firestore
+              .collection('riwayat')
+              .doc(doc.id)
+              .collection('barang_riwayat')
+              .add({
+            'nama': penjualan[i]['nama'],
+            'quantity': penjualan[i]['quantity'],
+            'harga_satuan': penjualan[i]['harga_satuan'],
+            'total_harga_barang': penjualan[i]['total_harga_barang'],
+          });
+
+          _firestore
+              .collection('barang')
+              .doc(penjualan[i]['id_barang'])
+              .update({
+            'stock': penjualan[i]['stock_awal'] - penjualan[i]['quantity'],
+          }).then((value) {
+            for (var ds in penjualan) {
+              ds.reference.delete();
+            }
+          });
+
+          // _firestore
+          //     .collection('penjualan')
+          //     .doc(penjualan[i]['id_barang'])
+          //     .update({
+          //   'stock_awal': penjualan[i]['stock_awal'] - penjualan[i]['quantity']
+          // });
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override

@@ -10,7 +10,10 @@ abstract class Routes {
   static const SPLASH = _Paths.SPLASH;
   static const CREATE = _Paths.CREATE;
   static const UPDATE = _Paths.UPDATE;
-  static const RIWAYAT_INFO = _Paths.RIWAYAT_INFO;
+  static const STOCK = _Paths.STOCK;
+  static const SALE = _Paths.SALE;
+  static const HISTORY = _Paths.HISTORY;
+  static const HISTORY_INFO = _Paths.HISTORY_INFO;
 }
 
 abstract class _Paths {
@@ -22,5 +25,8 @@ abstract class _Paths {
   static const SPLASH = '/splash';
   static const CREATE = '/create';
   static const UPDATE = '/update';
-  static const RIWAYAT_INFO = '/riwayat-info';
+  static const STOCK = '/stock';
+  static const SALE = '/sale';
+  static const HISTORY = '/history';
+  static const HISTORY_INFO = '/history-info';
 }
