@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 class SaleController extends GetxController {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  //TODO: Implement SaleController
 
   final count = 0.obs;
   @override
@@ -102,6 +101,7 @@ class SaleController extends GetxController {
       var penjualanQuery = await _firestore.collection('penjualan').get();
       var penjualan = penjualanQuery.docs;
       num totalHarga = 0;
+      int isValidTotal = 0;
 
       for (int i = 0; i < penjualan.length; i++) {
         totalHarga = totalHarga + penjualan[i]['total_harga_barang'];
@@ -109,47 +109,62 @@ class SaleController extends GetxController {
 
       DateTime now = DateTime.now();
 
+      for (i = 0; i < penjualan.length; i++) {
+        var stokQuery = await _firestore
+            .collection('barang')
+            .where('id_barang', isEqualTo: penjualan[i]['id_barang'])
+            .get();
+        var stok = stokQuery.docs;
+        if (stok[0]['stock'] >= penjualan[i]['quantity']) {
+          isValidTotal += 1;
+        }
+      }
+
       // Mendapatkan Unix time dalam milidetik
       int unixTimeMillis = now.millisecondsSinceEpoch;
-      await _firestore.collection('riwayat').add({
-        'pelanggan': pelanggan,
-      }).then((DocumentReference doc) {
-        _firestore.collection('riwayat').doc(doc.id).update({
-          'total_harga': totalHarga,
-          'tanggal': unixTimeMillis,
-          'id': doc.id,
+
+      if (isValidTotal == penjualan.length) {
+        await _firestore.collection('riwayat').add({
+          'pelanggan': pelanggan,
+        }).then((DocumentReference doc) {
+          _firestore.collection('riwayat').doc(doc.id).update({
+            'total_harga': totalHarga,
+            'tanggal': unixTimeMillis,
+            'id': doc.id,
+          });
+          for (i = 0; i < penjualan.length; i++) {
+            _firestore
+                .collection('riwayat')
+                .doc(doc.id)
+                .collection('barang_riwayat')
+                .add({
+              'nama': penjualan[i]['nama'],
+              'quantity': penjualan[i]['quantity'],
+              'harga_satuan': penjualan[i]['harga_satuan'],
+              'total_harga_barang': penjualan[i]['total_harga_barang'],
+            });
+
+            _firestore
+                .collection('barang')
+                .doc(penjualan[i]['id_barang'])
+                .update({
+              'stock': penjualan[i]['stock_awal'] - penjualan[i]['quantity'],
+            }).then((value) {
+              for (var ds in penjualan) {
+                ds.reference.delete();
+              }
+            });
+          }
         });
-        for (i = 0; i < penjualan.length; i++) {
-          _firestore
-              .collection('riwayat')
-              .doc(doc.id)
-              .collection('barang_riwayat')
-              .add({
-            'nama': penjualan[i]['nama'],
-            'quantity': penjualan[i]['quantity'],
-            'harga_satuan': penjualan[i]['harga_satuan'],
-            'total_harga_barang': penjualan[i]['total_harga_barang'],
-          });
-
-          _firestore
-              .collection('barang')
-              .doc(penjualan[i]['id_barang'])
-              .update({
-            'stock': penjualan[i]['stock_awal'] - penjualan[i]['quantity'],
-          }).then((value) {
-            for (var ds in penjualan) {
-              ds.reference.delete();
-            }
-          });
-
-          // _firestore
-          //     .collection('penjualan')
-          //     .doc(penjualan[i]['id_barang'])
-          //     .update({
-          //   'stock_awal': penjualan[i]['stock_awal'] - penjualan[i]['quantity']
-          // });
-        }
-      });
+      } else {
+        Get.defaultDialog(
+          title: 'Gagal melakukan penjualan',
+          middleText:
+              'Stok barang pada gudang kurang dari permintaan pelanggan',
+          textConfirm: 'Oke',
+          onConfirm: () => Get.back(),
+        );
+      }
     } catch (e) {
       print(e);
     }
