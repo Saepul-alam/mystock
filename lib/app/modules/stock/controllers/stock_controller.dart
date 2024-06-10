@@ -69,25 +69,36 @@ class StockController extends GetxController {
 
   void tambahPenjualan(String nama, int quantity, int hargaSatuan,
       int totalHargaBarang, String idBarang, int stock) async {
+    var stokBarang = await _firestore.collection('barang').doc(idBarang).get();
     var isExist = await _firestore
         .collection('penjualan')
-        .where('nama', isEqualTo: nama)
+        .where('id_barang', isEqualTo: idBarang)
         .get();
     try {
-      if (isExist.size == 1) {
-        Get.defaultDialog(
-            title: 'Error',
-            middleText: 'Barang telah ada di penjualan',
-            textCancel: 'Oke');
+      if (stokBarang['stock'] > 0) {
+        if (isExist.size == 1) {
+          Get.defaultDialog(
+              title: 'Error',
+              middleText: 'Barang telah ada di penjualan',
+              textCancel: 'Oke');
+        } else {
+          await _firestore.collection('penjualan').doc(idBarang).set({
+            'nama': nama,
+            'quantity': quantity,
+            'harga_satuan': hargaSatuan,
+            'total_harga_barang': totalHargaBarang,
+            'id_barang': idBarang,
+            'stock_awal': stock,
+          });
+        }
       } else {
-        await _firestore.collection('penjualan').doc(idBarang).set({
-          'nama': nama,
-          'quantity': quantity,
-          'harga_satuan': hargaSatuan,
-          'total_harga_barang': totalHargaBarang,
-          'id_barang': idBarang,
-          'stock_awal': stock,
-        });
+        Get.defaultDialog(
+          title: 'Stok Habis',
+          middleText:
+              'Stok barang yang dipilih habis, silahkan edit barang jika stok di gundang sudah bertambah',
+          textConfirm: 'Oke',
+          onConfirm: () => Get.back(),
+        );
       }
     } catch (e) {
       print(e);
