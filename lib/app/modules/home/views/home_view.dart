@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mystock/app/modules/history/views/history_view.dart';
+import 'package:mystock/app/modules/home/controllers/home_controller.dart';
 import 'package:mystock/app/modules/sale/views/sale_view.dart';
 import 'package:mystock/app/modules/stock/views/stock_view.dart';
-import '../../../routes/app_pages.dart';
+// import '../../../routes/app_pages.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
 
   @override
@@ -20,23 +21,8 @@ class HomeView extends StatelessWidget {
             style: TextStyle(color: Color(0xffffffff)),
           ),
           actions: [
-            IconButton(
-              onPressed: () {
-                Get.toNamed(Routes.REGISTER);
-              },
-              icon: const Row(
-                children: [
-                  Icon(
-                    Icons.account_circle,
-                    color: Colors.white,
-                  ),
-                  Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
-            ),
+            controller.roleValidation(),
+            controller.exitButton(),
           ],
         ),
         body: Column(
@@ -49,7 +35,7 @@ class HomeView extends StatelessWidget {
                 Tab(text: 'Riwayat'),
               ],
             ),
-            Expanded(
+            const Expanded(
               child: TabBarView(
                 children: [
                   StockView(),
