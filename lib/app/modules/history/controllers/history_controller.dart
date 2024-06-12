@@ -7,11 +7,12 @@ class HistoryController extends GetxController {
 
   Stream<QuerySnapshot<Object?>> streamDataRiwayat() {
     CollectionReference data = firestore.collection('riwayat');
-    return data.snapshots();
+    return data.orderBy('tanggal', descending: true).snapshots();
   }
 
   String formatCurrency(int amount) {
-    final formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
+    final formatter =
+        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
     return formatter.format(amount);
   }
 
