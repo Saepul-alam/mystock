@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:mystock/app/routes/app_pages.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -20,9 +21,10 @@ class LoginController extends GetxController {
         Get.snackbar(
           'Success',
           'User logged in successfully',
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.all(12),
+          backgroundColor: Colors.green,
         );
         emailController.clear();
         passwordController.clear();
@@ -31,38 +33,40 @@ class LoginController extends GetxController {
         Get.snackbar(
           'Error',
           'Please verify your email',
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.all(12),
+          backgroundColor: Colors.green,
         );
       }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('wrong email');
+      print(e.code);
+      if (e.code == 'invalid-email') {
         Get.snackbar(
           'Error',
-          'No user found for that email.',
-          snackPosition: SnackPosition.BOTTOM,
+          'Email tidak valid, gunakan email yang valid.',
+          snackPosition: SnackPosition.TOP,
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.all(12),
+          backgroundColor: Colors.green,
         );
-      } else if (e.code == 'wrong-password') {
-        print('wrong password');
+      } else if (e.code == 'invalid-credential') {
         Get.snackbar(
           'Error',
-          'Wrong password provided for that user.',
-          snackPosition: SnackPosition.BOTTOM,
+          'Password atau email yang dimasukkan salah.',
+          snackPosition: SnackPosition.TOP,
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.all(12),
+          backgroundColor: Colors.green,
         );
-      } else if (e.code == 'too-many-requests') {
-        print('too-many-requests');
+      } else if (e.code == 'channel-error') {
         Get.snackbar(
           'Error',
-          'Too many requests. Try again later.',
-          snackPosition: SnackPosition.BOTTOM,
+          'Email dan password tidak boleh kosong.',
+          snackPosition: SnackPosition.TOP,
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.all(12),
+          backgroundColor: Colors.green,
         );
       }
       print(e.code);

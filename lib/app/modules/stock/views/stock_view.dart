@@ -16,8 +16,9 @@ class StockView extends GetView<StockController> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(15.0),
+          Container(
+            height: 75,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: TextField(
               controller: searchController,
               decoration: InputDecoration(
@@ -77,6 +78,7 @@ class StockView extends GetView<StockController> {
                               doc['nama'],
                               style: const TextStyle(
                                 color: Colors.white,
+                                fontSize: 18,
                               ),
                             ),
                             subtitle: Column(
@@ -84,14 +86,19 @@ class StockView extends GetView<StockController> {
                               children: [
                                 Text(
                                   'Stock: ${doc['stock']}',
-                                  style: const TextStyle(
-                                    color: Color.fromARGB(221, 255, 244, 143),
+                                  style: TextStyle(
+                                    color: doc['stock'] == 0
+                                        ? Color.fromARGB(221, 255, 26, 26)
+                                        : const Color.fromARGB(
+                                            221, 255, 244, 143),
+                                    fontSize: 14,
                                   ),
                                 ),
                                 Text(
                                   'Harga: ${doc['harga']}',
                                   style: const TextStyle(
                                     color: Color.fromARGB(221, 247, 255, 248),
+                                    fontSize: 14,
                                   ),
                                 ),
                                 Row(
@@ -161,7 +168,7 @@ class StockView extends GetView<StockController> {
             }),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            padding: const EdgeInsets.only(left: 15.0, right: 15, top: 15),
             child: ElevatedButton(
               onPressed: () {
                 Get.toNamed(Routes.CREATE);
@@ -187,7 +194,7 @@ class StockView extends GetView<StockController> {
               ),
             ),
           ),
-          const Padding(padding: EdgeInsets.only(bottom: 3)),
+          const Padding(padding: EdgeInsets.only(bottom: 10)),
         ],
       ),
     );

@@ -11,10 +11,6 @@ class SaleView extends GetView<SaleController> {
   Widget build(BuildContext context) {
     final SaleController controller = Get.put(SaleController());
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('SaleView'),
-      //   centerTitle: true,
-      // ),
       body: Column(
         children: [
           Expanded(
@@ -49,6 +45,7 @@ class SaleView extends GetView<SaleController> {
 
                     return Column(
                       children: [
+                        const Padding(padding: EdgeInsets.only(top: 10)),
                         Expanded(
                           child: ListView.builder(
                             shrinkWrap: true,
@@ -73,8 +70,11 @@ class SaleView extends GetView<SaleController> {
                                     children: [
                                       Text(
                                         "Jumlah: ${data[index]['quantity'].toString()}",
-                                        style: const TextStyle(
-                                          color: Colors.white,
+                                        style: TextStyle(
+                                          color: data[index]['quantity'] >
+                                                  data[index]['stock_awal']
+                                              ? Colors.red[600]
+                                              : Colors.white,
                                           fontSize: 14,
                                         ),
                                       ),
@@ -108,10 +108,10 @@ class SaleView extends GetView<SaleController> {
                                                   .green, // Text color white
                                             ),
                                             child: const Text(
-                                              '+1',
+                                              '+',
                                               style: TextStyle(
                                                   color: Colors.white,
-                                                  fontSize: 12),
+                                                  fontSize: 24),
                                             ),
                                           ),
                                           const SizedBox(width: 8),
@@ -123,11 +123,8 @@ class SaleView extends GetView<SaleController> {
                                                       ['harga_satuan'] *
                                                   jumlah;
                                               if (jumlah < 1) {
-                                                Get.defaultDialog(
-                                                    title: 'Error',
-                                                    middleText:
-                                                        'Jumlah barang tidak bisa kurang dari 0',
-                                                    textCancel: 'Oke');
+                                                controller.deleteDataPenjualan(
+                                                    data[index].id);
                                               } else {
                                                 controller.updateJumlah(
                                                     data[index].id, jumlah);
@@ -142,10 +139,10 @@ class SaleView extends GetView<SaleController> {
                                                   .green, // Text color white
                                             ),
                                             child: const Text(
-                                              '-1',
+                                              '-',
                                               style: TextStyle(
                                                   color: Colors.white,
-                                                  fontSize: 12),
+                                                  fontSize: 24),
                                             ),
                                           ),
                                         ],
@@ -183,91 +180,39 @@ class SaleView extends GetView<SaleController> {
                           ),
                         ),
                         const Padding(padding: EdgeInsets.only(top: 10)),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              controller.konfirmasiPenjualan();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: const Color(0xFF478755),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 12.0),
+                              child: Center(
+                                child: Text(
+                                  'Jual',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     );
                   }
                 }),
           ),
-          // Container(
-          //   width: 400,
-          //   decoration: BoxDecoration(
-          //       color: const Color(0xFF478755),
-          //       borderRadius: BorderRadius.circular(20)),
-          //   child: InkWell(
-          //     onTap: () {
-          //       controller.submitPenjualan();
-          //     },
-          //     borderRadius: const BorderRadius.only(
-          //       topLeft: Radius.circular(20),
-          //       topRight: Radius.circular(20),
-          //     ),
-          //     child: const Padding(
-          //       padding: EdgeInsets.symmetric(vertical: 12.0),
-          //       child: Center(
-          //         child: Text(
-          //           'Jual Barang',
-          //           style: TextStyle(
-          //             color: Colors.white,
-          //             fontSize: 16.0,
-          //             fontWeight: FontWeight.bold,
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: ElevatedButton(
-              onPressed: () {
-                Get.defaultDialog(
-                  title: 'Konfirmasi Nama Pelanggan',
-                  content: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(padding: EdgeInsets.only(bottom: 5)),
-                      TextField(
-                        controller: controller.namaPelangganController,
-                        decoration: const InputDecoration(
-                          enabledBorder: UnderlineInputBorder(),
-                          labelText: 'Masukkan nama pelanggan',
-                        ),
-                      ),
-                      const Padding(padding: EdgeInsets.only(bottom: 15))
-                    ],
-                  ),
-                  onConfirm: () {
-                    controller.konfirmasiPenjualan(
-                        controller.namaPelangganController.text);
-                    Get.back();
-                  },
-                  textConfirm: 'Lanjutkan',
-                  textCancel: 'Batal',
-                  radius: 20,
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                primary: const Color(0xFF478755),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 12.0),
-                child: Center(
-                  child: Text(
-                    'Jual',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const Padding(padding: EdgeInsets.only(bottom: 3)),
+          const Padding(padding: EdgeInsets.only(bottom: 10)),
         ],
       ),
     );

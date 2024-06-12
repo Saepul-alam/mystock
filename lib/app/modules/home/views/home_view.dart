@@ -30,9 +30,30 @@ class HomeView extends GetView<HomeController> {
             TabBar(
               indicatorColor: Colors.green[900],
               tabs: const [
-                Tab(text: 'Stock'),
-                Tab(text: 'Penjualan'),
-                Tab(text: 'Riwayat'),
+                Tab(
+                  child: Text(
+                    'Stok',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+                Tab(
+                  child: Text(
+                    'Penjualan',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+                Tab(
+                  child: Text(
+                    'Riwayat',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
               ],
             ),
             const Expanded(
