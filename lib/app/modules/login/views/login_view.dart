@@ -20,17 +20,13 @@ class _LoginViewState extends State<LoginView> {
     });
   }
 
-// class LoginView extends GetView<LoginController> {
-//   const LoginView({super.key});
-  
   @override
-  
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -39,41 +35,30 @@ class _LoginViewState extends State<LoginView> {
         ),
         child: Center(
           child: Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: ListView(
               children: [
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Image.asset(
                   'assets/images/iconlogin.png',
                   height: 200,
                   width: 200,
                 ),
-                // Container(
-                //   alignment: Alignment.center,
-                //   padding: EdgeInsets.all(10),
-                //   child: const Text(
-                //     'Flutter Login Page',
-                //     style: TextStyle(
-                //         color: Colors.indigo,
-                //         fontWeight: FontWeight.w500,
-                //         fontSize: 30),
-                //   ),
-                // ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Container(
                   width: 300,
                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Username',
+                      const Text(
+                        'Email',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       TextField(
                         controller: controller.emailController,
                         decoration: InputDecoration(
@@ -86,21 +71,21 @@ class _LoginViewState extends State<LoginView> {
                     ],
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Container(
                   width: 300,
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Password',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       TextField(
                         obscureText: _obscureText,
                         controller: controller.passwordController,
@@ -122,14 +107,14 @@ class _LoginViewState extends State<LoginView> {
                     ],
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Container(
                     height: 50,
-                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        backgroundColor: Color(0xFF478755),
+                        backgroundColor: const Color(0xFF478755),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(32.0),
                         ),
@@ -143,7 +128,7 @@ class _LoginViewState extends State<LoginView> {
                   onPressed: () {
                     Get.toNamed(Routes.RESET_PASSWORD);
                   },
-                  child: Text('Forgot Password'),
+                  child: const Text('Forgot Password'),
                 ),
               ],
             ),

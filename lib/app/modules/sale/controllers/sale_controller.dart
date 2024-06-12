@@ -13,31 +13,6 @@ class SaleController extends GetxController {
     super.onInit();
   }
 
-  void tambahPenjualan(
-      String nama, int quantity, int hargaSatuan, int totalHargaBarang) async {
-    var isExist = await _firestore
-        .collection('penjualan')
-        .where('nama', isEqualTo: nama)
-        .get();
-    try {
-      if (isExist.size == 1) {
-        Get.defaultDialog(
-            title: 'Error',
-            middleText: 'Barang telah ada di penjualan',
-            textCancel: 'Oke');
-      } else {
-        await _firestore.collection('penjualan').add({
-          'nama': nama,
-          'quantity': quantity,
-          'harga_satuan': hargaSatuan,
-          'total_harga_barang': totalHargaBarang,
-        });
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
   Stream<QuerySnapshot<Map<String, dynamic>>> streamDataPenjualan() {
     CollectionReference<Map<String, dynamic>> data =
         _firestore.collection('penjualan');
@@ -94,20 +69,58 @@ class SaleController extends GetxController {
     }
   }
 
+  void submitPenjualan() async {
+    int i = 0;
+    var penjualanQuery = await _firestore.collection('penjualan').get();
+    var penjualan = penjualanQuery.docs;
+    num totalHarga = 0;
+
+    for (int i = 0; i < penjualan.length; i++) {
+      totalHarga = totalHarga + penjualan[i]['total_harga_barang'];
+    }
+
+    DateTime now = DateTime.now();
+
+    int unixTimeMillis = now.millisecondsSinceEpoch;
+
+    await _firestore.collection('riwayat').add({
+      'pelanggan': namaPelangganController.text,
+    }).then((DocumentReference doc) {
+      _firestore.collection('riwayat').doc(doc.id).update({
+        'total_harga': totalHarga,
+        'tanggal': unixTimeMillis,
+        'id': doc.id,
+      });
+      for (i = 0; i < penjualan.length; i++) {
+        _firestore
+            .collection('riwayat')
+            .doc(doc.id)
+            .collection('barang_riwayat')
+            .add({
+          'nama': penjualan[i]['nama'],
+          'quantity': penjualan[i]['quantity'],
+          'harga_satuan': penjualan[i]['harga_satuan'],
+          'total_harga_barang': penjualan[i]['total_harga_barang'],
+        });
+
+        _firestore.collection('barang').doc(penjualan[i]['id_barang']).update({
+          'stock': penjualan[i]['stock_awal'] - penjualan[i]['quantity'],
+        }).then((value) {
+          for (var ds in penjualan) {
+            ds.reference.delete();
+          }
+        });
+      }
+    });
+  }
+
   late TextEditingController namaPelangganController;
-  void konfirmasiPenjualan(String pelanggan) async {
+  void konfirmasiPenjualan() async {
     try {
       int i = 0;
       var penjualanQuery = await _firestore.collection('penjualan').get();
       var penjualan = penjualanQuery.docs;
-      num totalHarga = 0;
       int isValidTotal = 0;
-
-      for (int i = 0; i < penjualan.length; i++) {
-        totalHarga = totalHarga + penjualan[i]['total_harga_barang'];
-      }
-
-      DateTime now = DateTime.now();
 
       for (i = 0; i < penjualan.length; i++) {
         var stokQuery = await _firestore
@@ -120,42 +133,35 @@ class SaleController extends GetxController {
         }
       }
 
-      // Mendapatkan Unix time dalam milidetik
-      int unixTimeMillis = now.millisecondsSinceEpoch;
-
       if (isValidTotal == penjualan.length) {
-        await _firestore.collection('riwayat').add({
-          'pelanggan': pelanggan,
-        }).then((DocumentReference doc) {
-          _firestore.collection('riwayat').doc(doc.id).update({
-            'total_harga': totalHarga,
-            'tanggal': unixTimeMillis,
-            'id': doc.id,
-          });
-          for (i = 0; i < penjualan.length; i++) {
-            _firestore
-                .collection('riwayat')
-                .doc(doc.id)
-                .collection('barang_riwayat')
-                .add({
-              'nama': penjualan[i]['nama'],
-              'quantity': penjualan[i]['quantity'],
-              'harga_satuan': penjualan[i]['harga_satuan'],
-              'total_harga_barang': penjualan[i]['total_harga_barang'],
-            });
-
-            _firestore
-                .collection('barang')
-                .doc(penjualan[i]['id_barang'])
-                .update({
-              'stock': penjualan[i]['stock_awal'] - penjualan[i]['quantity'],
-            }).then((value) {
-              for (var ds in penjualan) {
-                ds.reference.delete();
-              }
-            });
-          }
-        });
+        Get.defaultDialog(
+          title: 'Konfirmasi Nama Pelanggan',
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(padding: EdgeInsets.only(bottom: 5)),
+              TextField(
+                controller: namaPelangganController,
+                decoration: const InputDecoration(
+                  enabledBorder: UnderlineInputBorder(),
+                  labelText: 'Masukkan nama pelanggan',
+                ),
+              ),
+              const Padding(padding: EdgeInsets.only(bottom: 15))
+            ],
+          ),
+          onConfirm: () {
+            submitPenjualan();
+            Get.back();
+            Get.defaultDialog(
+                title: 'Success',
+                middleText: 'Barang berhasil dijual',
+                textCancel: 'Oke');
+          },
+          textConfirm: 'Lanjutkan',
+          textCancel: 'Batal',
+          radius: 20,
+        );
       } else {
         Get.defaultDialog(
           title: 'Gagal melakukan penjualan',

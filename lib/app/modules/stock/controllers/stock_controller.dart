@@ -90,6 +90,13 @@ class StockController extends GetxController {
             'id_barang': idBarang,
             'stock_awal': stock,
           });
+
+          Get.defaultDialog(
+            title: 'Success',
+            middleText: 'Barang berhasil ditambahkan ke penjualan',
+            textConfirm: 'Oke',
+            onConfirm: () => Get.back(),
+          );
         }
       } else {
         Get.defaultDialog(
