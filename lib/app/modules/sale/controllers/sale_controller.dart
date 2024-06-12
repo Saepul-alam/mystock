@@ -74,7 +74,6 @@ class SaleController extends GetxController {
     var penjualanQuery = await _firestore.collection('penjualan').get();
     var penjualan = penjualanQuery.docs;
     num totalHarga = 0;
-    int isValidTotal = 0;
 
     for (int i = 0; i < penjualan.length; i++) {
       totalHarga = totalHarga + penjualan[i]['total_harga_barang'];
