@@ -15,7 +15,7 @@ class HomeView extends GetView<HomeController> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 186, 137, 119),
+          backgroundColor: Color.fromARGB(255, 14, 1, 39),
           title: const Text(
             'SRI REZEKI',
             style: TextStyle(
@@ -25,7 +25,7 @@ class HomeView extends GetView<HomeController> {
                 Shadow(
                   offset: Offset(2.0, 2.0),
                   blurRadius: 3.0,
-                  color: Color.fromARGB(128, 0, 0, 0),
+                  color: Color.fromARGB(128, 105, 104, 104),
                 ),
               ],
             ),
@@ -38,9 +38,8 @@ class HomeView extends GetView<HomeController> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  const Color.fromARGB(255, 97, 68, 58), // Starting color
-                  Colors.white
-                      .withOpacity(0), // Ending color with opacity to blend
+                  Color.fromARGB(255, 14, 1, 39),
+                  // Ending color with opacity to blend
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.center, // Change the end point to center

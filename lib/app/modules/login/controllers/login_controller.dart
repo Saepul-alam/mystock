@@ -18,15 +18,12 @@ class LoginController extends GetxController {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
           email: email, password: password);
       if (userCredential.user!.emailVerified) {
-        Get.snackbar(
-          'Success',
-          'User logged in successfully',
-          snackPosition: SnackPosition.TOP,
-          duration: const Duration(seconds: 2),
-          margin: const EdgeInsets.all(12),
-          colorText: Color.fromARGB(255, 20, 78, 22),
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        );
+        Get.snackbar('Success', 'User logged in successfully',
+            snackPosition: SnackPosition.TOP,
+            duration: const Duration(seconds: 2),
+            margin: const EdgeInsets.all(12),
+            colorText: Colors.white,
+            backgroundColor: Colors.green);
         emailController.clear();
         passwordController.clear();
         Get.offAllNamed(Routes.HOME);
@@ -37,8 +34,8 @@ class LoginController extends GetxController {
           snackPosition: SnackPosition.TOP,
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.all(12),
-          colorText: Colors.red,
-          backgroundColor: Colors.white,
+          colorText: Colors.white,
+          backgroundColor: Colors.red,
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -50,8 +47,8 @@ class LoginController extends GetxController {
           snackPosition: SnackPosition.TOP,
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.all(12),
-          colorText: Colors.red,
-          backgroundColor: Colors.white,
+          colorText: Colors.white,
+          backgroundColor: Colors.red,
         );
       } else if (e.code == 'invalid-credential') {
         Get.snackbar(
@@ -60,8 +57,8 @@ class LoginController extends GetxController {
           snackPosition: SnackPosition.TOP,
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.all(12),
-          colorText: Colors.red,
-          backgroundColor: Colors.white,
+          colorText: Colors.white,
+          backgroundColor: Colors.red,
         );
       } else if (e.code == 'channel-error') {
         Get.snackbar(
@@ -70,8 +67,8 @@ class LoginController extends GetxController {
           snackPosition: SnackPosition.TOP,
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.all(12),
-          colorText: Colors.red,
-          backgroundColor: Colors.white,
+          colorText: Colors.white,
+          backgroundColor: Colors.red,
         );
       }
       print(e.code);

@@ -34,7 +34,7 @@ class SaleView extends GetView<SaleController> {
                     );
                   } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                     return const Center(
-                      child: Text('No data'),
+                      child: Text('Masukan barang yang ingin di jual'),
                     );
                   } else {
                     var data = snapshot.data!.docs;
@@ -63,11 +63,11 @@ class SaleView extends GetView<SaleController> {
                                       spreadRadius: 2,
                                       blurRadius: 5,
                                       offset: Offset(
-                                          0, 3), // changes position of shadow
+                                          0, 5), // changes position of shadow
                                     ),
                                   ],
                                   color: Color.fromARGB(255, 254, 254, 254),
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(15),
                                 ),
                                 margin: const EdgeInsets.symmetric(
                                     vertical: 4.0, horizontal: 8.0),
@@ -135,7 +135,7 @@ class SaleView extends GetView<SaleController> {
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.w800,
-                                                  fontSize: 24),
+                                                  fontSize: 20),
                                             ),
                                           ),
                                           const SizedBox(width: 8),
@@ -169,7 +169,7 @@ class SaleView extends GetView<SaleController> {
                                               '-',
                                               style: TextStyle(
                                                   color: Colors.white,
-                                                  fontSize: 24),
+                                                  fontSize: 20),
                                             ),
                                           ),
                                         ],

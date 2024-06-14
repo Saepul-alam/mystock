@@ -10,12 +10,20 @@ class HistoryInfoView extends GetView<HistoryInfoController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 186, 137, 119),
+        automaticallyImplyLeading: false,
+        backgroundColor: Color.fromARGB(255, 14, 1, 39),
         title: const Text(
           'Detail Riwayat',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () => controller.printDocument(Get.arguments),
+            icon: Icon(Icons.print),
+            color: Colors.white,
+          ),
+        ],
       ),
       body: FutureBuilder<DocumentSnapshot>(
         future: controller.getRiwayatById(Get.arguments),

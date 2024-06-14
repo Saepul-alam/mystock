@@ -199,6 +199,7 @@ class _RegisterViewState extends State<RegisterView> {
                             controller.emailController.text,
                             controller.passwordController.text,
                             controller.nameController.text,
+                            controller.confirmPasswordController.text,
                           ),
                         ),
                       ),

@@ -23,7 +23,8 @@ class CreateController extends GetxController {
       });
 
       Get.back();
-      Get.snackbar('Success', 'Data added successfully');
+      Get.snackbar('Success', 'Data added successfully',
+          colorText: Colors.white, backgroundColor: Colors.green);
       namaController.clear();
       stockController.clear();
       hargaController.clear(); // Clear harga controller

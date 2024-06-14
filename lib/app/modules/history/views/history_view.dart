@@ -16,6 +16,7 @@ class HistoryView extends GetView<HistoryController> {
       //   title: const Text('HistoryView'),
       //   centerTitle: true,
       // ),
+
       body: Container(
           decoration: BoxDecoration(
             color: Colors.grey[200], // Set the background color here
@@ -30,13 +31,15 @@ class HistoryView extends GetView<HistoryController> {
                       itemCount: data.length,
                       itemBuilder: (context, index) {
                         var document = data[index];
+
                         return Container(
                           margin: const EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 12.0),
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
+                                color: const Color.fromARGB(255, 0, 0, 0)
+                                    .withOpacity(0.5),
                                 spreadRadius: 2,
                                 blurRadius: 5,
                                 offset:
