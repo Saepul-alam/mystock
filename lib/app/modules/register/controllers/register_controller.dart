@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mystock/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,73 +9,82 @@ class RegisterController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
-  // bool obscureText = true;
 
-  void register(
-    String email,
-    String password,
-    String name,
-  ) async {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-      await saveUserInfo(
-        userCredential.user!.uid,
-        email,
-        name,
+  void register(String email, String password, String name, String confirmPassword) async {
+    if (email.isEmpty || password.isEmpty || name.isEmpty || confirmPassword.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Mohon isi semua kolom.',
+        snackPosition: SnackPosition.TOP,
+        duration: Duration(seconds: 3),
+        margin: EdgeInsets.all(12),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
       );
+      return;
+    }
+
+    if (password != confirmPassword) {
+      Get.snackbar(
+        'Error',
+        'Password dan Konfirmasi Password tidak cocok.',
+        snackPosition: SnackPosition.TOP,
+        duration: Duration(seconds: 3),
+        margin: EdgeInsets.all(12),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    try {
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      await saveUserInfo(userCredential.user!.uid, email, name);
 
       Get.snackbar(
         'Success',
-        'User created successfully',
-        snackPosition: SnackPosition.BOTTOM,
-        duration: Duration(seconds: 2),
+        'Pendaftaran berhasil. Silakan verifikasi email Anda untuk melanjutkan.',
+        snackPosition: SnackPosition.TOP,
+        duration: Duration(seconds: 5),
         margin: EdgeInsets.all(12),
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
       );
 
       userCredential.user!.sendEmailVerification();
       Get.defaultDialog(
-        title: 'Verify your email',
+        title: 'Verifikasi Email Anda',
         middleText:
-            'Please verify your email to continue. We have sent you an email verification link.',
+            'Mohon verifikasi email Anda untuk melanjutkan. Kami telah mengirimkan tautan verifikasi email ke alamat email Anda.',
         textConfirm: 'OK',
-        textCancel: 'Resend',
         confirmTextColor: Colors.white,
-        onConfirm: () {
-          Get.offAllNamed(Routes.LOGIN);
-        },
-        onCancel: () {
-          userCredential.user!.sendEmailVerification();
-          Get.snackbar(
-            'Success',
-            'Email verification link sent',
-            snackPosition: SnackPosition.BOTTOM,
-            duration: Duration(seconds: 2),
-            margin: EdgeInsets.all(12),
-          );
-        },
+        onConfirm: () => Get.back(),
+        barrierDismissible: false,
       );
     } on FirebaseAuthException catch (e) {
+      String errorMessage = 'Terjadi kesalahan. Silakan coba lagi.';
       if (e.code == 'weak-password') {
-        Get.snackbar(
-          'Error',
-          'The password provided is too weak.',
-          snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 2),
-          margin: EdgeInsets.all(12),
-        );
+        errorMessage = 'Password yang Anda masukkan terlalu lemah. Mohon gunakan password yang lebih kuat.';
       } else if (e.code == 'email-already-in-use') {
-        Get.snackbar(
-          'Error',
-          'The account already exists for that email.',
-          snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 2),
-          margin: EdgeInsets.all(12),
-        );
+        errorMessage = 'Akun sudah ada untuk email tersebut.';
       }
-      print(e.code);
+
+      Get.snackbar(
+        'Error',
+        errorMessage,
+        snackPosition: SnackPosition.TOP,
+        duration: Duration(seconds: 5),
+        margin: EdgeInsets.all(12),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+
+      print('FirebaseAuthException: ${e.code}');
     } catch (e) {
-      print(e);
+      print('Error: $e');
     }
   }
 
@@ -94,10 +102,6 @@ class RegisterController extends GetxController {
       print('Error saving user info: $e');
     }
   }
-
-  // void togglePasswordVisibility(){
-  //   obscureText = !obscureText;
-  // }
 
   @override
   void onClose() {
