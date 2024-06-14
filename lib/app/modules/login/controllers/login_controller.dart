@@ -24,7 +24,7 @@ class LoginController extends GetxController {
           snackPosition: SnackPosition.TOP,
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.all(12),
-          colorText: Colors.green,
+          colorText: Color.fromARGB(255, 20, 78, 22),
           backgroundColor: Color.fromARGB(255, 255, 255, 255),
         );
         emailController.clear();

@@ -31,32 +31,32 @@ class _RegisterViewState extends State<RegisterView> {
     return DefaultTabController(
         length: 3,
         child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Color(0xFF478755),
-            title: Text(
-              'SRI REZEKI',
-              style: TextStyle(color: Color(0xffffffff)),
-            ),
-            // actions: [
-            //   IconButton(
-            //     onPressed: () {
-            //       Get.toNamed(Routes.REGISTER);
-            //     },
-            //     icon: Row(
-            //       children: [
-            //         Icon(
-            //           Icons.account_circle,
-            //           color: Colors.white,
-            //         ),
-            //         Icon(
-            //           Icons.add,
-            //           color: Colors.white,
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ],
-          ),
+          // appBar: AppBar(
+          //   backgroundColor: const Color.fromARGB(255, 14, 1, 39),
+          //   title: Text(
+          //     'SRI REZEKI',
+          //     style: TextStyle(color: Color(0xffffffff)),
+          //   ),
+          // actions: [
+          //   IconButton(
+          //     onPressed: () {
+          //       Get.toNamed(Routes.REGISTER);
+          //     },
+          //     icon: Row(
+          //       children: [
+          //         Icon(
+          //           Icons.account_circle,
+          //           color: Colors.white,
+          //         ),
+          //         Icon(
+          //           Icons.add,
+          //           color: Colors.white,
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ],
+          // ),
           body: Container(
             child: Stack(
               children: [
@@ -70,7 +70,7 @@ class _RegisterViewState extends State<RegisterView> {
                         child: const Text(
                           'Register Page',
                           style: TextStyle(
-                              color: Color(0xFF478755),
+                              color: const Color.fromARGB(255, 14, 1, 39),
                               fontWeight: FontWeight.w500,
                               fontSize: 30),
                         ),
@@ -188,7 +188,8 @@ class _RegisterViewState extends State<RegisterView> {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
-                            backgroundColor: Color(0xFF478755),
+                            backgroundColor:
+                                const Color.fromARGB(255, 14, 1, 39),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),

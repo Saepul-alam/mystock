@@ -18,7 +18,17 @@ class HomeView extends GetView<HomeController> {
           backgroundColor: Color.fromARGB(255, 186, 137, 119),
           title: const Text(
             'SRI REZEKI',
-            style: TextStyle(color: Color(0xffffffff)),
+            style: TextStyle(
+              color: Color(0xffffffff),
+              fontWeight: FontWeight.bold,
+              shadows: [
+                Shadow(
+                  offset: Offset(2.0, 2.0),
+                  blurRadius: 3.0,
+                  color: Color.fromARGB(128, 0, 0, 0),
+                ),
+              ],
+            ),
           ),
           actions: [
             controller.roleValidation(),

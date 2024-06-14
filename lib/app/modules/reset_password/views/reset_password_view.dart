@@ -41,7 +41,7 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
                       Container(
                         padding: const EdgeInsets.all(20),
                         child: const Text(
-                          'Msukan email anda untuk bisa mengubah password',
+                          'Masukan email anda untuk bisa mengubah password',
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: Color.fromARGB(255, 14, 1, 39),
