@@ -11,7 +11,11 @@ class SaleView extends GetView<SaleController> {
   Widget build(BuildContext context) {
     final SaleController controller = Get.put(SaleController());
     return Scaffold(
-      body: Column(
+        body: Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[200], // Set the background color here
+      ),
+      child: Column(
         children: [
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
@@ -53,8 +57,17 @@ class SaleView extends GetView<SaleController> {
                             itemBuilder: (context, index) {
                               return Container(
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF478755),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 2,
+                                      blurRadius: 5,
+                                      offset: Offset(
+                                          0, 3), // changes position of shadow
+                                    ),
+                                  ],
+                                  color: Color.fromARGB(255, 254, 254, 254),
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
                                 margin: const EdgeInsets.symmetric(
                                     vertical: 4.0, horizontal: 8.0),
@@ -62,7 +75,11 @@ class SaleView extends GetView<SaleController> {
                                   title: Text(
                                     data[index]['nama'],
                                     style: const TextStyle(
-                                        color: Colors.white, fontSize: 18),
+                                      color:
+                                          const Color.fromARGB(255, 14, 1, 39),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w800,
+                                    ),
                                   ),
                                   subtitle: Column(
                                     crossAxisAlignment:
@@ -74,16 +91,19 @@ class SaleView extends GetView<SaleController> {
                                           color: data[index]['quantity'] >
                                                   data[index]['stock_awal']
                                               ? Colors.red[600]
-                                              : Colors.white,
+                                              : Colors.green,
                                           fontSize: 14,
+                                          fontWeight: FontWeight.w800,
                                         ),
                                       ),
                                       Text(
                                         "Harga Barang: ${data[index]['harga_satuan']}"
                                             .toString(),
                                         style: const TextStyle(
-                                          color: Colors.white,
+                                          color: const Color.fromARGB(
+                                              255, 14, 1, 39),
                                           fontSize: 14,
+                                          fontWeight: FontWeight.w800,
                                         ),
                                       ),
                                       Row(
@@ -104,13 +124,17 @@ class SaleView extends GetView<SaleController> {
                                             },
                                             style: ElevatedButton.styleFrom(
                                               foregroundColor: Colors.white,
-                                              backgroundColor: Colors
-                                                  .green, // Text color white
+                                              backgroundColor: Color.fromARGB(
+                                                  255,
+                                                  45,
+                                                  74,
+                                                  98), // Text color white
                                             ),
                                             child: const Text(
                                               '+',
                                               style: TextStyle(
                                                   color: Colors.white,
+                                                  fontWeight: FontWeight.w800,
                                                   fontSize: 24),
                                             ),
                                           ),
@@ -134,10 +158,13 @@ class SaleView extends GetView<SaleController> {
                                               }
                                             },
                                             style: ElevatedButton.styleFrom(
-                                              foregroundColor: Colors.white,
-                                              backgroundColor: Colors
-                                                  .green, // Text color white
-                                            ),
+                                                foregroundColor: Colors.white,
+                                                backgroundColor: Color.fromARGB(
+                                                    255,
+                                                    210,
+                                                    33,
+                                                    20) // Text color white
+                                                ),
                                             child: const Text(
                                               '-',
                                               style: TextStyle(
@@ -152,8 +179,10 @@ class SaleView extends GetView<SaleController> {
                                   trailing: IconButton(
                                     onPressed: () => controller
                                         .deleteDataPenjualan(data[index].id),
-                                    icon: const Icon(Icons.delete),
-                                    color: Colors.white,
+                                    icon: const Icon(
+                                      Icons.delete_forever_rounded,
+                                    ),
+                                    color: Color.fromARGB(255, 210, 33, 20),
                                   ),
                                 ),
                               );
@@ -161,46 +190,62 @@ class SaleView extends GetView<SaleController> {
                           ),
                         ),
                         const Padding(padding: EdgeInsets.only(top: 10)),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Total Harga:',
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w500),
-                              ),
-                              Text(
-                                '${hitungTotalHarga()}',
-                                style: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w500),
-                              )
-                            ],
+                        Container(
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 254, 254, 254),
+                            borderRadius: BorderRadius.circular(0),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 15.0, right: 15, top: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Total Harga:',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                Text(
+                                  '${hitungTotalHarga()}',
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500),
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                        const Padding(padding: EdgeInsets.only(top: 10)),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              controller.konfirmasiPenjualan();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              primary: const Color(0xFF478755),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 254, 254, 254),
+                            borderRadius: BorderRadius.circular(0),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 15.0, right: 15, top: 15),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                controller.konfirmasiPenjualan();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    const Color.fromARGB(255, 14, 1, 39),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
                               ),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 12.0),
-                              child: Center(
-                                child: Text(
-                                  'Jual',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 12.0),
+                                child: Center(
+                                  child: Text(
+                                    'Jual',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -215,6 +260,6 @@ class SaleView extends GetView<SaleController> {
           const Padding(padding: EdgeInsets.only(bottom: 10)),
         ],
       ),
-    );
+    ));
   }
 }

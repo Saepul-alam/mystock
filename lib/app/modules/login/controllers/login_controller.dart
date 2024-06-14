@@ -24,7 +24,8 @@ class LoginController extends GetxController {
           snackPosition: SnackPosition.TOP,
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.all(12),
-          backgroundColor: Colors.green,
+          colorText: Colors.green,
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
         );
         emailController.clear();
         passwordController.clear();
@@ -36,7 +37,8 @@ class LoginController extends GetxController {
           snackPosition: SnackPosition.TOP,
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.all(12),
-          backgroundColor: Colors.green,
+          colorText: Colors.red,
+          backgroundColor: Colors.white,
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -48,7 +50,8 @@ class LoginController extends GetxController {
           snackPosition: SnackPosition.TOP,
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.all(12),
-          backgroundColor: Colors.green,
+          colorText: Colors.red,
+          backgroundColor: Colors.white,
         );
       } else if (e.code == 'invalid-credential') {
         Get.snackbar(
@@ -57,7 +60,8 @@ class LoginController extends GetxController {
           snackPosition: SnackPosition.TOP,
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.all(12),
-          backgroundColor: Colors.green,
+          colorText: Colors.red,
+          backgroundColor: Colors.white,
         );
       } else if (e.code == 'channel-error') {
         Get.snackbar(
@@ -66,7 +70,8 @@ class LoginController extends GetxController {
           snackPosition: SnackPosition.TOP,
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.all(12),
-          backgroundColor: Colors.green,
+          colorText: Colors.red,
+          backgroundColor: Colors.white,
         );
       }
       print(e.code);

@@ -10,10 +10,9 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF5DA56C), Color(0xFFBDF4C9), Color(0xFFC3DBC8)],
+          image: DecorationImage(
+            image: AssetImage('assets/images/bg-forgetpassword.png'),
+            fit: BoxFit.cover,
           ),
         ),
         child: OrientationBuilder(
@@ -21,32 +20,32 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
             return Stack(
               children: [
                 Padding(
-                  padding: EdgeInsets.all(100),
+                  padding: EdgeInsets.all(40),
                   child: ListView(
                     children: [
                       Container(
                         alignment: Alignment.center,
                         padding: EdgeInsets.only(left: 10),
-                        child: const Text(
-                          'Reset Your Password',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            color: Color(0xFFFFFFFF),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 30,
-                          ),
-                        ),
+                        // Uncomment and adjust the text if needed
+                        // child: const Text(
+                        //   'Reset Your Password',
+                        //   textAlign: TextAlign.left,
+                        //   style: TextStyle(
+                        //     color: Color(0xFFFFFFFF),
+                        //     fontWeight: FontWeight.w500,
+                        //     fontSize: 30,
+                        //   ),
+                        // ),
                       ),
-                      SizedBox(height: 30),
+                      SizedBox(height: 320),
                       Container(
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.only(left: 10),
+                        padding: const EdgeInsets.all(20),
                         child: const Text(
-                          'masukan email anda untuk bisa mengubah password',
+                          'Msukan email anda untuk bisa mengubah password',
                           textAlign: TextAlign.left,
                           style: TextStyle(
-                            color: Color(0xFFFFFFFF),
-                            fontWeight: FontWeight.w500,
+                            color: Color.fromARGB(255, 14, 1, 39),
+                            fontWeight: FontWeight.w800,
                             fontSize: 20,
                           ),
                         ),
@@ -54,7 +53,7 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
                       SizedBox(height: 10),
                       Container(
                         padding: EdgeInsets.only(left: 10),
-                        child: Text(
+                        child: const Text(
                           'Email',
                           style: TextStyle(
                             fontSize: 18,
@@ -62,54 +61,71 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
                           ),
                         ),
                       ),
+                      SizedBox(height: 5),
                       Container(
-                        width: 300,
-                        padding: EdgeInsets.only(left: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.brown,
+                              blurRadius: 5,
+                              offset: Offset(0, 5),
+                            ),
+                          ],
+                          border: Border.all(
+                            color: Colors.brown, // Stroke color
+                            width: 2, // Stroke width
+                          ),
+                        ),
                         child: TextField(
                           controller: controller.emailController,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
                             ),
                             hintText: 'Enter your email',
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 10),
                           ),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 50),
                       Container(
-                        height: 50,
-                        width: 300,
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        height: 30,
+                        padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
-                            backgroundColor: Color(0xFF478755),
+                            backgroundColor: Color.fromARGB(255, 14, 1, 39),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
                           child: const Text('Reset Password'),
-                          onPressed: () => controller
-                              .resetPassword(controller.emailController.text),
+                          onPressed: () => controller.resetPassword(
+                            controller.emailController.text,
+                          ),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 20),
                       Container(
-                        height: 50,
-                        width: 300,
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        height: 30,
+                        padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
                         child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: Color(0xFF478755),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Color.fromARGB(255, 14, 1, 39),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            child: const Text('back'),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            }),
+                          ),
+                          child: const Text('Back'),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
                       ),
                     ],
                   ),

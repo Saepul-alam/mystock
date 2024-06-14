@@ -17,6 +17,9 @@ class HistoryView extends GetView<HistoryController> {
       //   centerTitle: true,
       // ),
       body: Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[200], // Set the background color here
+          ),
           child: StreamBuilder<QuerySnapshot<Object?>>(
               stream: controller.streamDataRiwayat(),
               builder: (context, snapshot) {
@@ -31,17 +34,17 @@ class HistoryView extends GetView<HistoryController> {
                           margin: const EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 12.0),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF478755),
-                            borderRadius: BorderRadius.circular(3.0),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 1,
-                                blurRadius: 3,
+                                spreadRadius: 2,
+                                blurRadius: 5,
                                 offset:
-                                    Offset(0, 2), // changes position of shadow
+                                    Offset(0, 3), // changes position of shadow
                               ),
                             ],
+                            color: Color.fromARGB(255, 70, 211, 91),
+                            borderRadius: BorderRadius.circular(20),
                           ),
 
                           // ========================== ini di aktifkan nanti
