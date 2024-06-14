@@ -15,7 +15,12 @@ class HistoryInfoView extends GetView<HistoryInfoController> {
           'Detail Riwayat',
           style: TextStyle(color: Color(0xffffffff)),
         ),
-        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () => controller.printDocument(Get.arguments),
+            icon: Icon(Icons.print),
+          ),
+        ],
       ),
       body: FutureBuilder<DocumentSnapshot>(
         future: controller.getRiwayatById(Get.arguments),
