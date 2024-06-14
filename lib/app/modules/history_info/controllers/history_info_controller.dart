@@ -65,6 +65,12 @@ class HistoryInfoController extends GetxController {
             return pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
+                pw.Center(
+            child: pw.Text(
+              'Invoice',
+              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 24),
+            ),
+          ),
                 pw.Text(
                   'Pelanggan: ${riwayatData['pelanggan']}',
                   style: pw.TextStyle(fontWeight: pw.FontWeight.normal, fontSize: 16),
