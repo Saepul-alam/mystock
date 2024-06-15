@@ -10,6 +10,25 @@ class HistoryController extends GetxController {
     return data.orderBy('tanggal', descending: true).snapshots();
   }
 
+
+
+
+   // Stream untuk mendapatkan data riwayat dengan filter tanggal
+  Stream<QuerySnapshot> streamDataRiwayatFiltered(DateTime date) {
+    var startDate = DateTime(date.year, date.month, date.day, 0, 0, 0);
+    var endDate = DateTime(date.year, date.month, date.day, 23, 59, 59);
+    
+    CollectionReference data = firestore.collection('riwayat');
+    return data
+        .where('tanggal', isGreaterThanOrEqualTo: startDate.millisecondsSinceEpoch)
+        .where('tanggal', isLessThanOrEqualTo: endDate.millisecondsSinceEpoch)
+        .orderBy('tanggal', descending: true)
+        .snapshots();
+  }
+
+
+  
+
   String formatCurrency(int amount) {
     final formatter =
         NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);

@@ -40,17 +40,42 @@ class HistoryInfoController extends GetxController {
         DateFormat('dd MMMM yyyy,', 'id_ID').add_jm().format(dateTime);
     return formattedDate;
   }
-   void printDocument(String id) async {
+  //  void printDocument(String id) async {
+  //   try {
+  //     final DocumentSnapshot snapshot = await getRiwayatById(id);
+  //     Printing.layoutPdf(
+  //       onLayout: (_) => _buildPdf(snapshot),
+  //     );
+  //   } catch (e) {
+  //     print('Error printing document: $e');
+  //   }
+  // }
+  void printDocument(String id) async {
     try {
       final DocumentSnapshot snapshot = await getRiwayatById(id);
       Printing.layoutPdf(
-        onLayout: (_) => _buildPdf(snapshot),
+        onLayout: (PdfPageFormat format) async {
+          try {
+            final Uint8List pdfBytes = await _buildPdf(snapshot);
+            return pdfBytes;
+          } catch (e) {
+            print('Error building PDF: $e');
+            throw Exception('Error building PDF: $e');
+          }
+        },
+        name: 'invoice-${_generatePdfFileName(snapshot)}.pdf',
       );
     } catch (e) {
       print('Error printing document: $e');
     }
   }
 
+    String _generatePdfFileName(DocumentSnapshot snapshot) {
+    final riwayatData = snapshot.data() as Map<String, dynamic>;
+    DateTime dateTime =
+        DateTime.fromMillisecondsSinceEpoch(riwayatData['tanggal']);
+    return DateFormat('dd-MM-yyyy_HH-mm', 'id_ID').format(dateTime);
+  }
   FutureOr<Uint8List> _buildPdf(DocumentSnapshot snapshot) async {
     final pdf = pw.Document();
     try {

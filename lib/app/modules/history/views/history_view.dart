@@ -88,3 +88,5 @@ class HistoryView extends GetView<HistoryController> {
     );
   }
 }
+
+
