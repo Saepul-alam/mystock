@@ -63,19 +63,21 @@ class HistoryInfoController extends GetxController {
             throw Exception('Error building PDF: $e');
           }
         },
-        name: 'invoice-${_generatePdfFileName(snapshot)}.pdf',
+        name: 'Transaksi-${_generatePdfFileName(snapshot)}.pdf',
       );
     } catch (e) {
       print('Error printing document: $e');
     }
   }
+  //this for change name invoice
+  String _generatePdfFileName(DocumentSnapshot snapshot) {
+  final riwayatData = snapshot.data() as Map<String, dynamic>;
+  DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(riwayatData['tanggal']);
+  String namaPelanggan = riwayatData['pelanggan'].toString().replaceAll(' ', '_');
+  String formattedDate = DateFormat('dd-MMMM-yyyy_HH-mm', 'id_ID').format(dateTime);
+  return '$namaPelanggan-$formattedDate';
+}
 
-    String _generatePdfFileName(DocumentSnapshot snapshot) {
-    final riwayatData = snapshot.data() as Map<String, dynamic>;
-    DateTime dateTime =
-        DateTime.fromMillisecondsSinceEpoch(riwayatData['tanggal']);
-    return DateFormat('dd-MM-yyyy_HH-mm', 'id_ID').format(dateTime);
-  }
   FutureOr<Uint8List> _buildPdf(DocumentSnapshot snapshot) async {
     final pdf = pw.Document();
     try {
@@ -92,7 +94,7 @@ class HistoryInfoController extends GetxController {
               children: [
                 pw.Center(
             child: pw.Text(
-              'Invoice',
+              'Bukti Transaksi',
               style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 24),
             ),
           ),

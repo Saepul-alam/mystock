@@ -15,12 +15,12 @@ class HistoryInfoView extends GetView<HistoryInfoController> {
           'Detail Riwayat',
           style: TextStyle(color: Color(0xffffffff)),
         ),
-        actions: [
-          IconButton(
-            onPressed: () => controller.printDocument(Get.arguments),
-            icon: Icon(Icons.print),
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () => controller.printDocument(Get.arguments),
+        //     icon: Icon(Icons.print),
+        //   ),
+        // ],
       ),
       body: FutureBuilder<DocumentSnapshot>(
         future: controller.getRiwayatById(Get.arguments),
@@ -162,31 +162,49 @@ class HistoryInfoView extends GetView<HistoryInfoController> {
                   ),
                   margin: const EdgeInsets.symmetric(
                       vertical: 12.0, horizontal: 12.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
                     children: [
-                      const Text(
-                        "Total",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Total",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                          Text(
+                            controller.formatCurrency(riwayatData['total_harga']),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          )
+                          
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      Center(
+                        child: FloatingActionButton.extended(
+                          onPressed: () => controller.printDocument(Get.arguments),
+                          icon: Icon(Icons.print),
+                          label: Text('Cetak Transaksi'),
+                          backgroundColor: const Color(0xFF478755),
                         ),
                       ),
-                      Text(
-                        controller.formatCurrency(riwayatData['total_harga']),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      )
                     ],
                   ),
+                  
                 ),
               ],
             );
           }
         },
       ),
+      
+    
     );
+    
   }
 }
