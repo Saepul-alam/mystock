@@ -188,8 +188,8 @@ class HistoryInfoView extends GetView<HistoryInfoController> {
                       Center(
                         child: FloatingActionButton.extended(
                           onPressed: () => controller.printDocument(Get.arguments),
-                          icon: Icon(Icons.print),
-                          label: Text('Cetak Transaksi'),
+                          icon: Icon(Icons.print, color: Colors.white),
+                          label: Text('Cetak Transaksi',style: TextStyle(color: Colors.white)),
                           backgroundColor: const Color(0xFF478755),
                         ),
                       ),
