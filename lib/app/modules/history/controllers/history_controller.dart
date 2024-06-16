@@ -30,8 +30,7 @@ class HistoryController extends GetxController {
 
   String formatDate(int tgl) {
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(tgl);
-    String formattedDate =
-        DateFormat('dd MMMM yyyy', 'id_ID').format(dateTime);
+    String formattedDate = DateFormat('dd MMMM yyyy', 'id_ID').format(dateTime);
     return formattedDate;
   }
 
@@ -89,220 +88,134 @@ class HistoryController extends GetxController {
     return query.snapshots();
   }
 
-  // Future<void> printPdf(List<DocumentSnapshot> data) async {
-  //   final pdf = pw.Document(); 
+  Future<void> printPdf(List<DocumentSnapshot> data) async {
+    final pdf = pw.Document();
 
-   
-  //   Map<String, List<List<dynamic>>> groupedData = {};
+    Map<String, List<List<dynamic>>> groupedData = {};
 
-  //   for (var document in data) {
-  //     final querySnapshot = await getBarangRiwayat(document.id).first;
-  //     List<DocumentSnapshot> docs = querySnapshot.docs;
-  //     for (var barang in docs) {
-  //       String pelanggan = document['pelanggan'];
-  //       if (!groupedData.containsKey(pelanggan)) {
-  //         groupedData[pelanggan] = [];
-  //       }
-  //       groupedData[pelanggan]!.add([
-  //         formatDate(document['tanggal']),
-  //         formatTime(document['tanggal']), 
-  //         barang['nama'],
-  //         barang['quantity'].toString(),
-  //         formatCurrency(barang['total_harga_barang']),
-  //       ]);
-  //     }
-  //   }
-
-  
-  //   pdf.addPage(
-  //     pw.MultiPage(
-  //       build: (context) => [
-  //         pw.Center(
-  //           child: pw.Text(
-  //             'Daftar Riwayat',
-  //             style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
-  //           ),
-  //         ),
-  //         pw.SizedBox(height: 20),
-          
-  //         for (var pelanggan in groupedData.keys)
-  //           pw.Column(
-  //             crossAxisAlignment: pw.CrossAxisAlignment.start,
-  //             children: [
-  //               pw.Text(
-  //                 'Nama Pelanggan: $pelanggan',
-  //                 style: pw.TextStyle(
-  //                   fontWeight: pw.FontWeight.bold,
-  //                   fontSize: 18,
-  //                 ),
-  //               ),
-  //               pw.Divider(
-  //                 height: 20,
-  //                 thickness: 2,
-  //                 color: PdfColors.grey,
-  //               ),
-  //               pw.Table.fromTextArray(
-  //                 border: pw.TableBorder.all(),
-  //                 headerAlignment: pw.Alignment.center,
-  //                 cellAlignment: pw.Alignment.center,
-  //                 headerDecoration: pw.BoxDecoration(
-  //                   borderRadius: pw.BorderRadius.circular(2),
-  //                   color: PdfColors.grey300,
-  //                 ),
-  //                 headerHeight: 40,
-  //                 cellHeight: 30,
-  //                 data: <List<dynamic>>[
-  //                   ['Tanggal', 'Jam', 'Nama Barang', 'Quantity', 'Total Harga'],
-  //                   ...groupedData[pelanggan]!,
-  //                 ],
-  //               ),
-  //               pw.SizedBox(height: 20),
-  //             ],
-  //           ),
-  //       ],
-  //     ),
-  //   );
-
-  //   String timestamp = DateTime.now().toString().replaceAll(' ', '_').replaceAll(':', '-');
-  //   String fileName = 'Daftar_Riwayat_$timestamp.pdf';
-
-  //   print('Printing requested at: $timestamp');
-
-  //   try {
-  //     await Printing.layoutPdf(
-  //       onLayout: (PdfPageFormat format) async => pdf.save(),
-  //       name: fileName,
-  //     );
-  //   } catch (e) {
-  //     print('Error printing PDF: $e');
-      
-  //     Get.snackbar(
-  //       'Error',
-  //       'Failed to print: $e',
-  //       snackPosition: SnackPosition.BOTTOM,
-  //     );
-  //   }
-  // }
-
-Future<void> printPdf(List<DocumentSnapshot> data) async {
-  final pdf = pw.Document(); 
-
-  Map<String, List<List<dynamic>>> groupedData = {};
-
-  for (var document in data) {
-    final querySnapshot = await getBarangRiwayat(document.id).first;
-    List<DocumentSnapshot> docs = querySnapshot.docs;
-    for (var barang in docs) {
-      String pelanggan = document['pelanggan'];
-      if (!groupedData.containsKey(pelanggan)) {
-        groupedData[pelanggan] = [];
+    for (var document in data) {
+      final querySnapshot = await getBarangRiwayat(document.id).first;
+      List<DocumentSnapshot> docs = querySnapshot.docs;
+      for (var barang in docs) {
+        String pelanggan = document['pelanggan'];
+        if (!groupedData.containsKey(pelanggan)) {
+          groupedData[pelanggan] = [];
+        }
+        int quantity = barang['quantity'];
+        int hargaSatuan = barang['harga_satuan'];
+        groupedData[pelanggan]!.add([
+          formatDate(document['tanggal']),
+          formatTime(document['tanggal']),
+          barang['nama'],
+          quantity.toString(),
+          formatCurrency(hargaSatuan),
+          formatCurrency(hargaSatuan * quantity), // total_harga
+        ]);
       }
-      int quantity = barang['quantity'];
-      int hargaSatuan = barang['harga_satuan'];
-      groupedData[pelanggan]!.add([
-        formatDate(document['tanggal']),
-        formatTime(document['tanggal']),
-        barang['nama'],
-        quantity.toString(),
-        formatCurrency(hargaSatuan),
-        formatCurrency(hargaSatuan * quantity), // total_harga
-      ]);
+    }
+
+    pdf.addPage(
+      pw.MultiPage(
+        build: (context) => [
+          pw.Center(
+            child: pw.Text(
+              'Daftar Riwayat',
+              style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
+            ),
+          ),
+          pw.SizedBox(height: 20),
+          for (var pelanggan in groupedData.keys)
+            pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text(
+                  'Nama Pelanggan: $pelanggan',
+                  style: pw.TextStyle(
+                    fontWeight: pw.FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                pw.Divider(
+                  height: 20,
+                  thickness: 2,
+                  color: PdfColors.grey,
+                ),
+                pw.Table.fromTextArray(
+                  border: pw.TableBorder.all(),
+                  headerAlignment: pw.Alignment.center,
+                  cellAlignment: pw.Alignment.center,
+                  headerDecoration: pw.BoxDecoration(
+                    borderRadius: pw.BorderRadius.circular(2),
+                    color: PdfColors.grey300,
+                  ),
+                  headerHeight: 40,
+                  cellHeight: 30,
+                  data: <List<dynamic>>[
+                    [
+                      'Tanggal',
+                      'Jam',
+                      'Nama Barang',
+                      'Quantity',
+                      'Harga Satuan',
+                      'Total Harga'
+                    ],
+                    ...groupedData[pelanggan]!,
+                  ],
+                ),
+                pw.SizedBox(height: 20),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.end,
+                  children: [
+                    pw.Text(
+                      'Total : ${calculateTotalHarga(groupedData[pelanggan]!)}',
+                      style: pw.TextStyle(
+                        fontWeight: pw.FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+                pw.SizedBox(height: 20),
+              ],
+            ),
+        ],
+      ),
+    );
+
+    String timestamp =
+        DateTime.now().toString().replaceAll(' ', '_').replaceAll(':', '-');
+    String fileName = 'Daftar_Riwayat_$timestamp.pdf';
+
+    print('Printing requested at: $timestamp');
+
+    try {
+      await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => pdf.save(),
+        name: fileName,
+      );
+    } catch (e) {
+      print('Error printing PDF: $e');
+
+      Get.snackbar(
+        'Error',
+        'Failed to print: $e',
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
   }
 
-  pdf.addPage(
-    pw.MultiPage(
-      build: (context) => [
-        pw.Center(
-          child: pw.Text(
-            'Daftar Riwayat',
-            style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
-          ),
-        ),
-        pw.SizedBox(height: 20),
-        
-        for (var pelanggan in groupedData.keys)
-          pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text(
-                'Nama Pelanggan: $pelanggan',
-                style: pw.TextStyle(
-                  fontWeight: pw.FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              pw.Divider(
-                height: 20,
-                thickness: 2,
-                color: PdfColors.grey,
-              ),
-              pw.Table.fromTextArray(
-                border: pw.TableBorder.all(),
-                headerAlignment: pw.Alignment.center,
-                cellAlignment: pw.Alignment.center,
-                headerDecoration: pw.BoxDecoration(
-                  borderRadius: pw.BorderRadius.circular(2),
-                  color: PdfColors.grey300,
-                ),
-                headerHeight: 40,
-                cellHeight: 30,
-                data: <List<dynamic>>[
-                  ['Tanggal', 'Jam', 'Nama Barang', 'Quantity', 'Harga Satuan', 'Total Harga'],
-                  ...groupedData[pelanggan]!,
-                ],
-              ),
-              pw.SizedBox(height: 20),
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.end,
-                children: [
-                  pw.Text(
-                    'Total : ${calculateTotalHarga(groupedData[pelanggan]!)}',
-                    style: pw.TextStyle(
-                      fontWeight: pw.FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-              pw.SizedBox(height: 20),
-            ],
-          ),
-      ],
-    ),
-  );
-
-  String timestamp = DateTime.now().toString().replaceAll(' ', '_').replaceAll(':', '-');
-  String fileName = 'Daftar_Riwayat_$timestamp.pdf';
-
-  print('Printing requested at: $timestamp');
-
-  try {
-    await Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async => pdf.save(),
-      name: fileName,
-    );
-  } catch (e) {
-    print('Error printing PDF: $e');
-    
-    Get.snackbar(
-      'Error',
-      'Failed to print: $e',
-      snackPosition: SnackPosition.BOTTOM,
-    );
+  String calculateTotalHarga(List<List<dynamic>> data) {
+    int total = 0;
+    for (var row in data) {
+      total += int.tryParse(row[5]
+              .replaceAll('Rp', '')
+              .replaceAll('.', '')
+              .replaceAll(',', '')
+              .trim()) ??
+          0;
+    }
+    return formatCurrency(total);
   }
-}
-
-String calculateTotalHarga(List<List<dynamic>> data) {
-  int total = 0;
-  for (var row in data) {
-    total += int.tryParse(row[5].replaceAll('Rp', '').replaceAll('.', '').replaceAll(',', '').trim()) ?? 0;
-  }
-  return formatCurrency(total);
-}
-
-
-
 
   Stream<QuerySnapshot<Object?>> getBarangRiwayat(String docId) {
     return firestore
