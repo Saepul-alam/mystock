@@ -32,11 +32,23 @@ class HistoryView extends GetView<HistoryController> {
             icon: Icon(Icons.refresh),
             onPressed: () => controller.resetFilter(),
           ),
+          // IconButton(
+          //   icon: Icon(Icons.print),
+          //   onPressed: () async {
+          //     var snapshot = await controller.streamDataRiwayat().first;
+          //     controller.printPdf(snapshot.docs);
+          //   },
+          // ),
           IconButton(
             icon: Icon(Icons.print),
             onPressed: () async {
-              var snapshot = await controller.streamDataRiwayat().first;
-              controller.printPdf(snapshot.docs);
+              try {
+                var snapshot = await controller.streamDataRiwayat().first;
+                await controller.printPdf(snapshot.docs);
+              } catch (e) {
+                print('Error printing: $e');
+                // Handle error or display a message to the user
+              }
             },
           ),
         ],

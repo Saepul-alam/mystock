@@ -34,13 +34,19 @@ class HistoryController extends GetxController {
         DateFormat('dd MMMM yyyy', 'id_ID').format(dateTime);
     return formattedDate;
   }
-  // HistoryController
-void resetFilter() {
-  selectedDate.value = null;
-  selectedMonth.value = 0;
-  selectedYear.value = 0;
-}
 
+  String formatTime(int tgl) {
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(tgl);
+    String formattedTime =
+        DateFormat('HH:mm', 'id_ID').format(dateTime); // Format jam
+    return formattedTime;
+  }
+
+  void resetFilter() {
+    selectedDate.value = null;
+    selectedMonth.value = 0;
+    selectedYear.value = 0;
+  }
 
   void filterdate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -82,57 +88,107 @@ void resetFilter() {
 
     return query.snapshots();
   }
-Future<void> printPdf(List<QueryDocumentSnapshot<Object?>> data) async {
-  final pdf = pw.Document();
 
-  List<List<String>> tableData = [
-    ['Pelanggan', 'Total Harga', 'Tanggal']
-  ];
+  Future<void> printPdf(List<DocumentSnapshot> data) async {
+    final pdf = pw.Document(); 
 
-  // Populate table data
-  for (var document in data) {
-    String pelanggan = document['pelanggan'].toString();
-    String totalHarga = formatCurrency(document['total_harga']);
-    String tanggal = formatDate(document['tanggal']);
-    tableData.add([pelanggan, totalHarga, tanggal]);
+   
+    Map<String, List<List<dynamic>>> groupedData = {};
+
+    for (var document in data) {
+      final querySnapshot = await getBarangRiwayat(document.id).first;
+      List<DocumentSnapshot> docs = querySnapshot.docs;
+      for (var barang in docs) {
+        String pelanggan = document['pelanggan'];
+        if (!groupedData.containsKey(pelanggan)) {
+          groupedData[pelanggan] = [];
+        }
+        groupedData[pelanggan]!.add([
+          formatDate(document['tanggal']),
+          formatTime(document['tanggal']), 
+          barang['nama'],
+          barang['quantity'].toString(),
+          formatCurrency(barang['total_harga_barang']),
+        ]);
+      }
+    }
+
+  
+    pdf.addPage(
+      pw.MultiPage(
+        build: (context) => [
+          pw.Center(
+            child: pw.Text(
+              'Daftar Riwayat',
+              style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
+            ),
+          ),
+          pw.SizedBox(height: 20),
+          
+          for (var pelanggan in groupedData.keys)
+            pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text(
+                  'Pelanggan: $pelanggan',
+                  style: pw.TextStyle(
+                    fontWeight: pw.FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                pw.Divider(
+                  height: 20,
+                  thickness: 2,
+                  color: PdfColors.grey,
+                ),
+                pw.Table.fromTextArray(
+                  border: pw.TableBorder.all(),
+                  headerAlignment: pw.Alignment.center,
+                  cellAlignment: pw.Alignment.center,
+                  headerDecoration: pw.BoxDecoration(
+                    borderRadius: pw.BorderRadius.circular(2),
+                    color: PdfColors.grey300,
+                  ),
+                  headerHeight: 40,
+                  cellHeight: 30,
+                  data: <List<dynamic>>[
+                    ['Tanggal', 'Jam', 'Nama Barang', 'Quantity', 'Total Harga'],
+                    ...groupedData[pelanggan]!,
+                  ],
+                ),
+                pw.SizedBox(height: 20),
+              ],
+            ),
+        ],
+      ),
+    );
+
+    String timestamp = DateTime.now().toString().replaceAll(' ', '_').replaceAll(':', '-');
+    String fileName = 'Daftar_Riwayat_$timestamp.pdf';
+
+    print('Printing requested at: $timestamp');
+
+    try {
+      await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => pdf.save(),
+        name: fileName,
+      );
+    } catch (e) {
+      print('Error printing PDF: $e');
+      
+      Get.snackbar(
+        'Error',
+        'Failed to print: $e',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
 
-  pdf.addPage(
-    pw.MultiPage(
-      build: (pw.Context context) => [
-        pw.Center(
-          child: pw.Text(
-            'Invoice',
-            style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
-          ),
-        ),
-        pw.Table.fromTextArray(
-          border: pw.TableBorder.all(),
-          headerAlignment: pw.Alignment.centerLeft,
-          cellAlignment: pw.Alignment.center,
-          headerDecoration: pw.BoxDecoration(
-            borderRadius: pw.BorderRadius.circular(2),
-            color: PdfColors.grey300,
-          ),
-          headerHeight: 40,
-          cellHeight: 30,
-          data: tableData.map((row) => row.map((cell) => pw.Center(child: pw.Text(cell))).toList()).toList(),
-        ),
-      ],
-    ),
-  );
-
-  String timestamp = DateTime.now().toString().replaceAll(' ', '_').replaceAll(':', '-');
-  String fileName = 'Invoice_$timestamp.pdf';
-
-  print('Printing requested at: $timestamp');
-
-  await Printing.layoutPdf(
-    onLayout: (PdfPageFormat format) async => pdf.save(),
-    name: fileName,
-  );
-}
-
-
-
+  Stream<QuerySnapshot<Object?>> getBarangRiwayat(String docId) {
+    return firestore
+        .collection('riwayat')
+        .doc(docId)
+        .collection('barang_riwayat')
+        .snapshots();
+  }
 }
