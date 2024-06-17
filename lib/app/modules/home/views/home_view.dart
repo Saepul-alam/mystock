@@ -25,11 +25,14 @@ class HomeView extends GetView<HomeController> {
             controller.exitButton(),
           ],
         ),
-        body: Column(
+        body: const Column(
           children: [
             TabBar(
-              indicatorColor: Colors.green[900],
-              tabs: const [
+              indicatorColor: Color(0xFF478755),
+              labelColor: Color(0xFF478755),
+              indicatorWeight: 5,
+              indicatorSize: TabBarIndicatorSize.tab,
+              tabs: [
                 Tab(
                   child: Text(
                     'Stok',
@@ -56,7 +59,7 @@ class HomeView extends GetView<HomeController> {
                 ),
               ],
             ),
-            const Expanded(
+            Expanded(
               child: TabBarView(
                 children: [
                   StockView(),

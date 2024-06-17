@@ -6,7 +6,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
-class HistoryController extends GetxController {
+class HistoryPenjualanController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Rx<DateTime?> selectedDate = Rx<DateTime?>(null);
