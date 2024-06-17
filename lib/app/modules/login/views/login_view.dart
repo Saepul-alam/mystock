@@ -26,25 +26,18 @@ class _LoginViewState extends State<LoginView> {
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF5DA56C), Color(0xFFC3DBC8), Color(0xFF58665B)],
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/bg-login.png'),
+            fit: BoxFit.cover,
           ),
         ),
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(20),
             child: ListView(
               children: [
-                const SizedBox(height: 20),
-                Image.asset(
-                  'assets/images/iconlogin.png',
-                  height: 200,
-                  width: 200,
-                ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 350),
                 Container(
                   width: 300,
                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -58,20 +51,40 @@ class _LoginViewState extends State<LoginView> {
                           fontSize: 18,
                         ),
                       ),
-                      const SizedBox(height: 5),
-                      TextField(
-                        controller: controller.emailController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
+                      const SizedBox(height: 10),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.brown,
+                              blurRadius: 5,
+                              offset: Offset(0, 5),
+                            ),
+                          ],
+                          border: Border.all(
+                            color: Colors.brown, // Stroke color
+                            width: 2, // Stroke width
                           ),
-                          hintText: 'Enter your email',
+                        ),
+                        child: TextField(
+                          controller: controller.emailController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide.none,
+                            ),
+                            hintText: 'Enter your email',
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 10),
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 Container(
                   width: 300,
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -85,45 +98,66 @@ class _LoginViewState extends State<LoginView> {
                           fontSize: 18,
                         ),
                       ),
-                      const SizedBox(height: 5),
-                      TextField(
-                        obscureText: _obscureText,
-                        controller: controller.passwordController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          hintText: 'Enter your password',
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureText
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
+                      const SizedBox(height: 10),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.brown,
+                              blurRadius: 5,
+                              offset: Offset(0, 5),
                             ),
-                            onPressed: _togglePasswordVisibility,
+                          ],
+                          border: Border.all(
+                            color: Colors.brown, // Stroke color
+                            width: 2, // Stroke width
+                          ),
+                        ),
+                        child: TextField(
+                          obscureText: _obscureText,
+                          controller: controller.passwordController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide.none,
+                            ),
+                            hintText: 'Enter your password',
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 10),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscureText
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: _togglePasswordVisibility,
+                            ),
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 30),
                 Container(
-                    height: 50,
-                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: const Color(0xFF478755),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(32.0),
-                        ),
+                  height: 50,
+                  padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color.fromARGB(255, 14, 1, 39),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32.0),
                       ),
-                      child: const Text('Login'),
-                      onPressed: () => controller.login(
-                          controller.emailController.text,
-                          controller.passwordController.text),
-                    )),
+                    ),
+                    child: const Text('Login'),
+                    onPressed: () => controller.login(
+                        controller.emailController.text,
+                        controller.passwordController.text),
+                  ),
+                ),
                 TextButton(
                   onPressed: () {
                     Get.toNamed(Routes.RESET_PASSWORD);

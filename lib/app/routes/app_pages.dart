@@ -1,5 +1,10 @@
 import 'package:get/get.dart';
 
+import 'package:mystock/app/modules/history_barang/bindings/history_barang_binding.dart';
+import 'package:mystock/app/modules/history_barang/views/history_barang_view.dart';
+import 'package:mystock/app/modules/history_penjualan/bindings/history_penjualan_binding.dart';
+import 'package:mystock/app/modules/history_penjualan/views/history_penjualan_view.dart';
+
 import '../modules/create/bindings/create_binding.dart';
 import '../modules/create/views/create_view.dart';
 import '../modules/history/bindings/history_binding.dart';
@@ -92,14 +97,15 @@ class AppPages {
       binding: HistoryInfoBinding(),
     ),
     GetPage(
-      name: _Paths.HISTORY_PENJUALAN,
-      page: () => const HistoryPenjualanView(),
-      binding: HistoryPenjualanBinding(),
-    ),
-    GetPage(
       name: _Paths.HISTORY_BARANG,
-      page: () => const HistoryBarangView(),
+      page: () => HistoryBarangView(),
       binding: HistoryBarangBinding(),
     ),
+    GetPage(
+      name: _Paths.HISTORY_PENJUALAN,
+      page: () => HistoryPenjualanView(),
+      binding: HistoryPenjualanBinding(),
+    ),
+
   ];
 }

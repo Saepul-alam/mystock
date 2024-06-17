@@ -28,11 +28,11 @@ class HistoryView extends GetView<HistoryController> {
                 child: TabBar(
                   indicatorSize: TabBarIndicatorSize.tab,
                   indicator: BoxDecoration(
-                    color: const Color(0xFF478755),
+                    color: Color.fromARGB(255, 45, 74, 98),
                     borderRadius: BorderRadius.circular(5),
                   ),
                   labelColor: Colors.white,
-                  unselectedLabelColor: const Color(0xFF478755),
+                  unselectedLabelColor: Colors.black,
                   tabs: const [
                     Tab(
                       child: Text(

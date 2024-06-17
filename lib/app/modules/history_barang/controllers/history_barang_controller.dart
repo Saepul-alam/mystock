@@ -12,7 +12,7 @@ class HistoryBarangController extends GetxController {
 
   Future<void> deleteDataRiwayat(String documentId) async {
     try {
-      await firestore.collection('riwayat_barang').doc(documentId).delete();
+      await firestore.collection('riwayat_stok').doc(documentId).delete();
       print('Document $documentId deleted');
     } catch (e) {
       print('Error deleting document: $e');

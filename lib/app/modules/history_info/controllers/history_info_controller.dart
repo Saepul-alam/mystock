@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'dart:typed_data';
 
 class HistoryInfoController extends GetxController {
   //TODO: Implement HistoryInfoController
@@ -41,16 +40,6 @@ class HistoryInfoController extends GetxController {
     return formattedDate;
   }
 
-  //  void printDocument(String id) async {
-  //   try {
-  //     final DocumentSnapshot snapshot = await getRiwayatById(id);
-  //     Printing.layoutPdf(
-  //       onLayout: (_) => _buildPdf(snapshot),
-  //     );
-  //   } catch (e) {
-  //     print('Error printing document: $e');
-  //   }
-  // }
   void printDocument(String id) async {
     try {
       final DocumentSnapshot snapshot = await getRiwayatById(id);

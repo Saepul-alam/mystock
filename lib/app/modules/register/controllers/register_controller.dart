@@ -10,6 +10,12 @@ class RegisterController extends GetxController {
   TextEditingController confirmPasswordController = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
 
+  void register(String email, String password, String name,
+      String confirmPassword) async {
+    if (email.isEmpty ||
+        password.isEmpty ||
+        name.isEmpty ||
+        confirmPassword.isEmpty) {
   void register(String email, String password, String name, String confirmPassword) async {
     if (email.isEmpty || password.isEmpty || name.isEmpty || confirmPassword.isEmpty) {
       Get.snackbar(

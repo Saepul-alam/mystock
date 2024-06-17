@@ -10,21 +10,22 @@ class HistoryInfoView extends GetView<HistoryInfoController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF478755),
+        automaticallyImplyLeading: false,
+        backgroundColor: Color.fromARGB(255, 14, 1, 39),
         title: const Text(
           'Detail Riwayat',
-          style: TextStyle(color: Color(0xffffffff)),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: FutureBuilder<DocumentSnapshot>(
         future: controller.getRiwayatById(Get.arguments),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.data!.exists) {
-            return Center(child: Text('Riwayat not found'));
+          } else if (!snapshot.hasData || !snapshot.data!.exists) {
+            return const Center(child: Text('Riwayat not found'));
           } else {
             final riwayatData = snapshot.data!.data() as Map<String, dynamic>;
             return Column(
@@ -103,13 +104,17 @@ class HistoryInfoView extends GetView<HistoryInfoController> {
                     stream: controller.getBarangRiwayat(snapshot.data!.id),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
                         return Center(child: Text('Error: ${snapshot.error}'));
-                      } else if (snapshot.data!.docs.isEmpty) {
-                        return Center(child: Text('Belum ada barang riwayat'));
+                      } else if (!snapshot.hasData ||
+                          snapshot.data!.docs.isEmpty) {
+                        return const Center(
+                            child: Text('Belum ada barang riwayat'));
                       } else {
                         return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: snapshot.data!.docs.length,
                           itemBuilder: (context, index) {
                             final barangRiwayatData = snapshot.data!.docs[index]
@@ -155,14 +160,16 @@ class HistoryInfoView extends GetView<HistoryInfoController> {
                       }
                     },
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 16),
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      top: BorderSide(
-                        color: Color.fromRGBO(226, 232, 240, 1),
-                        width: 3.0,
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 12),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 12.0, horizontal: 12.0),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(
+                            color: Color.fromRGBO(226, 232, 240, 1),
+                            width: 10.0),
                       ),
                     ),
                   ),
@@ -203,8 +210,8 @@ class HistoryInfoView extends GetView<HistoryInfoController> {
                       ),
                     ],
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           }
         },

@@ -16,7 +16,7 @@ class CreateView extends GetView<CreateController> {
               child: const Text(
                 'Form Input Barang',
                 style: TextStyle(
-                  color: Color(0xFF478755),
+                  color: const Color.fromARGB(255, 14, 1, 39),
                   fontWeight: FontWeight.w500,
                   fontSize: 30,
                 ),
@@ -69,7 +69,7 @@ class CreateView extends GetView<CreateController> {
               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF478755),
+                  backgroundColor: const Color.fromARGB(255, 14, 1, 39),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(32.0),
                   ),

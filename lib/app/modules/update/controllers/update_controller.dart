@@ -43,6 +43,8 @@ class UpdateController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
         duration: const Duration(seconds: 2),
         margin: const EdgeInsets.all(12),
+        colorText: Colors.white,
+        backgroundColor: Colors.green,
       );
     } catch (e) {
       Get.snackbar(

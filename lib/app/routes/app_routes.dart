@@ -14,8 +14,8 @@ abstract class Routes {
   static const SALE = _Paths.SALE;
   static const HISTORY = _Paths.HISTORY;
   static const HISTORY_INFO = _Paths.HISTORY_INFO;
-  static const HISTORY_PENJUALAN = _Paths.HISTORY_PENJUALAN;
   static const HISTORY_BARANG = _Paths.HISTORY_BARANG;
+  static const HISTORY_PENJUALAN = _Paths.HISTORY_PENJUALAN;
 }
 
 abstract class _Paths {
