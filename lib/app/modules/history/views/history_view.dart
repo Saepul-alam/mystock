@@ -1,171 +1,68 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:mystock/app/routes/app_pages.dart';
-import '../controllers/history_controller.dart';
+import 'package:mystock/app/modules/history/controllers/history_controller.dart';
+import 'package:mystock/app/modules/history_barang/views/history_barang_view.dart';
+
+import '../../history_penjualan/views/history_penjualan_view.dart';
+// import '../../../routes/app_pages.dart';
 
 class HistoryView extends GetView<HistoryController> {
   const HistoryView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final HistoryController controller = Get.put(HistoryController());
-
-    void _selectDate(BuildContext context) async {
-      final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2101),
-      );
-      if (picked != null) {
-        controller.selectedDate.value = picked;
-      }
-    }
-
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[200], // Updated to a cleaner background color
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Obx(() {
-                return StreamBuilder<QuerySnapshot<Object?>>(
-                  stream: controller.streamDataRiwayat(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      if (snapshot.data!.size != 0) {
-                        var data = snapshot.data!.docs;
-                        return ListView.builder(
-                          itemCount: data.length,
-                          itemBuilder: (context, index) {
-                            var document = data[index];
-
-                            return Container(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 16.0),
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 2,
-                                    blurRadius: 5,
-                                    offset: Offset(0, 3),
-                                  ),
-                                ],
-                                color: Color.fromARGB(255, 70, 211,
-                                    91), // Updated background color
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: ListTile(
-                                onTap: () => Get.toNamed(Routes.HISTORY_INFO,
-                                    arguments: document.id),
-                                title: Text(
-                                  document['pelanggan'],
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 18,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  controller
-                                      .formatCurrency(document['total_harga']),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    color: Colors.white70,
-                                  ),
-                                ),
-                                trailing: Text(
-                                  controller.formatDate(document['tanggal']),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    color: Colors.white70,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      } else {
-                        return Center(
-                          child: Text(
-                            'No data',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.black,
-                            ),
-                          ),
-                        );
-                      }
-                    } else {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.teal,
-                        ),
-                      );
-                    }
-                  },
-                );
-              }),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-              child: Container(
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: Column(
+            children: [
+              Container(
+                height: 40,
+                margin: const EdgeInsets.symmetric(horizontal: 40),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(2),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(5),
                 ),
-                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Obx(() {
-                      return Text(
-                        controller.selectedDate.value != null
-                            ? 'Selected Date: ${DateFormat('dd MMMM yyyy', 'id_ID').format(controller.selectedDate.value!)}'
-                            : 'No date selected',
+                child: TabBar(
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicator: BoxDecoration(
+                    color: Color.fromARGB(255, 45, 74, 98),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Colors.black,
+                  tabs: const [
+                    Tab(
+                      child: Text(
+                        'Penjualan',
                         style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          fontSize: 18,
                         ),
-                      );
-                    }),
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.date_range, color: Colors.black),
-                          onPressed: () => _selectDate(context),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        'Stok',
+                        style: TextStyle(
+                          fontSize: 18,
                         ),
-                        IconButton(
-                          icon: Icon(Icons.print, color: Colors.black),
-                          onPressed: () async {
-                            var snapshot =
-                                await controller.streamDataRiwayat().first;
-                            controller.printPdf(snapshot.docs);
-                          },
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+              const Expanded(
+                child: TabBarView(
+                  children: [
+                    HistoryPenjualanView(),
+                    HistoryBarangView(),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

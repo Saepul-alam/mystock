@@ -14,28 +14,46 @@ class UpdateController extends GetxController {
   }
 
   void updateData(String docID, String nama, int stock, String harga) async {
+    DateTime now = DateTime.now();
+
+    int unixTimeMillis = now.millisecondsSinceEpoch;
     try {
+      var stokAwal = await firestore.collection('barang').doc(docID).get();
+      // print(stokAwal['stock']);
+
+      num perubahanStok = stock - stokAwal['stock'];
+
       await firestore.collection('barang').doc(docID).update({
         'nama': nama,
         'stock': stock,
         'harga': harga, // Include harga in Firestore data
       });
 
+      await firestore.collection('riwayat_stok').add({
+        'nama': nama,
+        'stock': perubahanStok,
+        'status': 'Edit barang',
+        'tanggal': unixTimeMillis,
+      });
+
       Get.back();
-      Get.snackbar('Success', 'Data updated successfully',
-          snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 2),
-          margin: EdgeInsets.all(12),
-          colorText: Colors.white,
-          backgroundColor: Colors.green);
+      Get.snackbar(
+        'Success',
+        'Data updated successfully',
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 2),
+        margin: const EdgeInsets.all(12),
+        colorText: Colors.white,
+        backgroundColor: Colors.green,
+      );
     } catch (e) {
-      print(e);
-      Get.snackbar('Error', 'Failed updating data',
-          snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 2),
-          margin: EdgeInsets.all(12),
-          colorText: Colors.white,
-          backgroundColor: Colors.red);
+      Get.snackbar(
+        'Error',
+        'Failed updating data',
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 2),
+        margin: const EdgeInsets.all(12),
+      );
     }
   }
 
