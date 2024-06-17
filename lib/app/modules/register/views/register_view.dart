@@ -12,7 +12,7 @@ class RegisterView extends StatefulWidget {
 class _RegisterViewState extends State<RegisterView> {
   final RegisterController controller = Get.put(RegisterController());
   bool _obscureText = true;
-  bool __obscureText = true;
+  bool _confirmObscureText = true;
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -20,9 +20,9 @@ class _RegisterViewState extends State<RegisterView> {
     });
   }
 
-  void _togglePasswordVisibilityconfirm() {
+  void _toggleConfirmPasswordVisibility() {
     setState(() {
-      __obscureText = !__obscureText;
+      _confirmObscureText = !_confirmObscureText;
     });
   }
 
@@ -31,32 +31,6 @@ class _RegisterViewState extends State<RegisterView> {
     return DefaultTabController(
         length: 3,
         child: Scaffold(
-          // appBar: AppBar(
-          //   backgroundColor: const Color.fromARGB(255, 14, 1, 39),
-          //   title: Text(
-          //     'SRI REZEKI',
-          //     style: TextStyle(color: Color(0xffffffff)),
-          //   ),
-          // actions: [
-          //   IconButton(
-          //     onPressed: () {
-          //       Get.toNamed(Routes.REGISTER);
-          //     },
-          //     icon: Row(
-          //       children: [
-          //         Icon(
-          //           Icons.account_circle,
-          //           color: Colors.white,
-          //         ),
-          //         Icon(
-          //           Icons.add,
-          //           color: Colors.white,
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ],
-          // ),
           body: Container(
             child: Stack(
               children: [
@@ -203,32 +177,54 @@ class _RegisterViewState extends State<RegisterView> {
                           ),
                         ),
                       ),
-                      // SizedBox(height: 48),
-                      // TabBar(
-                      //   indicatorColor: Colors.green[900],
-                      //   tabs: [
-                      //     Tab(text: 'Stock'),
-                      //     Tab(text: 'Penjualan'),
-                      //     Tab(text: 'Riwayat'),
-                      //   ],
-                      // ),
-
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   children: [
-                      //     Text('Already have an account?'),
-                      //     TextButton(
-                      //       child: Text('Login'),
-                      //       onPressed: () => Get.back(),
-                      //     )
-                      //   ],
-                      // )
                     ],
                   ),
+                  onPressed: _togglePasswordVisibility,
                 ),
-              ],
+              ),
             ),
-          ),
-        ));
+            const SizedBox(height: 20),
+            TextField(
+              controller: controller.confirmPasswordController,
+              obscureText: _confirmObscureText,
+              decoration: InputDecoration(
+                labelText: 'Confirm Password',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _confirmObscureText ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: _toggleConfirmPasswordVisibility,
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () => controller.register(
+                controller.emailController.text,
+                controller.passwordController.text,
+                controller.nameController.text,
+                controller.confirmPasswordController.text,
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: const Color(0xFF478755),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 15),
+                child: Text(
+                  'Register',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

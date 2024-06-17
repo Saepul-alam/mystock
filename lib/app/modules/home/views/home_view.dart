@@ -47,7 +47,7 @@ class HomeView extends GetView<HomeController> {
             ),
           ),
         ),
-        body: Column(
+        body: const Column(
           children: [
             TabBar(
               indicatorColor: Color.fromARGB(221, 180, 166, 40),
@@ -78,7 +78,7 @@ class HomeView extends GetView<HomeController> {
                 ),
               ],
             ),
-            const Expanded(
+            Expanded(
               child: TabBarView(
                 children: [
                   StockView(),

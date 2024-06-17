@@ -31,6 +31,6 @@ abstract class _Paths {
   static const SALE = '/sale';
   static const HISTORY = '/history';
   static const HISTORY_INFO = '/history-info';
-  static const HISTORY_BARANG = '/history-barang';
   static const HISTORY_PENJUALAN = '/history-penjualan';
+  static const HISTORY_BARANG = '/history-barang';
 }

@@ -7,7 +7,6 @@ import '../controllers/history_barang_controller.dart';
 
 class HistoryBarangView extends GetView<HistoryBarangController> {
   const HistoryBarangView({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final HistoryBarangController controller =

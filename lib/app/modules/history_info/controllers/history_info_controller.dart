@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -45,11 +44,32 @@ class HistoryInfoController extends GetxController {
     try {
       final DocumentSnapshot snapshot = await getRiwayatById(id);
       Printing.layoutPdf(
-        onLayout: (_) => _buildPdf(snapshot),
+        onLayout: (PdfPageFormat format) async {
+          try {
+            final Uint8List pdfBytes = await _buildPdf(snapshot);
+            return pdfBytes;
+          } catch (e) {
+            print('Error building PDF: $e');
+            throw Exception('Error building PDF: $e');
+          }
+        },
+        name: 'Transaksi-${_generatePdfFileName(snapshot)}.pdf',
       );
     } catch (e) {
       print('Error printing document: $e');
     }
+  }
+
+  //this for change name invoice
+  String _generatePdfFileName(DocumentSnapshot snapshot) {
+    final riwayatData = snapshot.data() as Map<String, dynamic>;
+    DateTime dateTime =
+        DateTime.fromMillisecondsSinceEpoch(riwayatData['tanggal']);
+    String namaPelanggan =
+        riwayatData['pelanggan'].toString().replaceAll(' ', '_');
+    String formattedDate =
+        DateFormat('dd-MMMM-yyyy_HH-mm', 'id_ID').format(dateTime);
+    return '$namaPelanggan-$formattedDate';
   }
 
   FutureOr<Uint8List> _buildPdf(DocumentSnapshot snapshot) async {
@@ -61,14 +81,14 @@ class HistoryInfoController extends GetxController {
       final List<DocumentSnapshot> docs = querySnapshot.docs;
 
       pdf.addPage(
-        pw.Page(
-          build: (context) {
-            return pw.Column(
+        pw.MultiPage(
+          build: (context) => [
+            pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
                 pw.Center(
                   child: pw.Text(
-                    'Invoice',
+                    'SRI REZEKI',
                     style: pw.TextStyle(
                         fontWeight: pw.FontWeight.bold, fontSize: 24),
                   ),
@@ -88,63 +108,49 @@ class HistoryInfoController extends GetxController {
                     height: 20,
                     thickness: 8,
                     color: PdfColor.fromInt(0xFFf1f5f9)),
-                pw.Container(
-                  margin: const pw.EdgeInsets.only(bottom: 10.0),
-                  child: pw.Text(
-                    'Daftar Barang',
-                    style: pw.TextStyle(
-                        fontWeight: pw.FontWeight.bold, fontSize: 18),
-                  ),
-                ),
-                pw.ListView.builder(
-                  itemCount: docs.length,
-                  itemBuilder: (context, index) {
-                    final barang = docs[index].data() as Map<String, dynamic>;
-                    return pw.Container(
-                      margin: const pw.EdgeInsets.symmetric(vertical: 8.0),
-                      child: pw.Row(
-                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                        children: [
-                          pw.Text(
-                            barang['nama'],
-                            style: pw.TextStyle(
-                                fontWeight: pw.FontWeight.bold, fontSize: 16),
-                          ),
-                          pw.Text(
-                            '${formatCurrency(barang['harga_satuan'])} x ${barang['quantity']}',
-                            style: pw.TextStyle(fontSize: 16),
-                          ),
-                          pw.Text(
-                            formatCurrency(barang['total_harga_barang']),
-                            style: pw.TextStyle(
-                                fontWeight: pw.FontWeight.bold, fontSize: 16),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-                pw.Container(
-                  margin: const pw.EdgeInsets.only(top: 16.0),
-                  child: pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Text(
-                        'Total',
-                        style: pw.TextStyle(
-                            fontWeight: pw.FontWeight.bold, fontSize: 20),
-                      ),
-                      pw.Text(
-                        formatCurrency(riwayatData['total_harga']),
-                        style: pw.TextStyle(
-                            fontWeight: pw.FontWeight.bold, fontSize: 20),
-                      ),
-                    ],
-                  ),
-                ),
               ],
-            );
-          },
+            ),
+            pw.Table.fromTextArray(
+              border: pw.TableBorder.all(width: 1.0),
+              headerStyle:
+                  pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 16),
+              cellStyle:
+                  pw.TextStyle(fontWeight: pw.FontWeight.normal, fontSize: 16),
+              headerDecoration: pw.BoxDecoration(
+                borderRadius: pw.BorderRadius.circular(2),
+                color: PdfColors.grey300,
+              ),
+              headers: ['Nama Barang', 'Harga Satuan', 'Quantity', 'Total'],
+              cellAlignment: pw.Alignment.center,
+              data: List<List<dynamic>>.generate(
+                docs.length,
+                (index) => [
+                  docs[index]['nama'],
+                  formatCurrency(docs[index]['harga_satuan']),
+                  docs[index]['quantity'],
+                  formatCurrency(docs[index]['total_harga_barang']),
+                ],
+              ),
+            ),
+            pw.Container(
+              margin: const pw.EdgeInsets.only(top: 16.0),
+              child: pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text(
+                    'Total',
+                    style: pw.TextStyle(
+                        fontWeight: pw.FontWeight.bold, fontSize: 20),
+                  ),
+                  pw.Text(
+                    formatCurrency(riwayatData['total_harga']),
+                    style: pw.TextStyle(
+                        fontWeight: pw.FontWeight.bold, fontSize: 20),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       );
 

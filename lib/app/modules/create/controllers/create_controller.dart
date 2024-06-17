@@ -10,16 +10,25 @@ class CreateController extends GetxController {
 
   void addData(String nama, int stock, String harga) async {
     try {
-      String dateNow = DateTime.now().toString();
+      DateTime now = DateTime.now();
+
+      int unixTimeMillis = now.millisecondsSinceEpoch;
+
       await firestore.collection('barang').add({
         'nama': nama,
         'stock': stock,
         'harga': harga,
-        'time': dateNow
       }).then((DocumentReference doc) {
         firestore.collection('barang').doc(doc.id).update({
           'id_barang': doc.id,
         });
+      });
+
+      await firestore.collection('riwayat_stok').add({
+        'nama': nama,
+        'stock': stock,
+        'status': 'Barang baru',
+        'tanggal': unixTimeMillis,
       });
 
       Get.back();

@@ -16,14 +16,6 @@ class HistoryInfoView extends GetView<HistoryInfoController> {
           'Detail Riwayat',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () => controller.printDocument(Get.arguments),
-            icon: Icon(Icons.print),
-            color: Colors.white,
-          ),
-        ],
       ),
       body: FutureBuilder<DocumentSnapshot>(
         future: controller.getRiwayatById(Get.arguments),
@@ -36,73 +28,79 @@ class HistoryInfoView extends GetView<HistoryInfoController> {
             return const Center(child: Text('Riwayat not found'));
           } else {
             final riwayatData = snapshot.data!.data() as Map<String, dynamic>;
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Pelanggan",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black54,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          riwayatData['pelanggan'],
-                          style: const TextStyle(
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        const Text(
-                          "Tanggal",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black54,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          controller.formatDate(riwayatData['tanggal']),
-                          style: const TextStyle(
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ],
-                    ),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: double.maxFinite,
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 8.0,
+                    horizontal: 12.0,
                   ),
-                  const Divider(
-                    height: 20,
-                    thickness: 8,
-                    color: Color.fromRGBO(241, 245, 249, 1),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                    child: const Text(
-                      'Daftar Barang',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Pelanggan",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black54,
+                          fontSize: 16,
+                        ),
+                        textAlign: TextAlign.left,
                       ),
+                      Text(
+                        riwayatData['pelanggan'],
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      const Text(
+                        "Tanggal",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black54,
+                          fontSize: 16,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                      Text(
+                        controller.formatDate(riwayatData['tanggal']),
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(
+                  height: 20,
+                  thickness: 8,
+                  indent: 0,
+                  endIndent: 0,
+                  color: Color.fromRGBO(241, 245, 249, 1),
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 8.0,
+                    horizontal: 12.0,
+                  ),
+                  child: const Text(
+                    'Daftar Barang',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
                     ),
                   ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  StreamBuilder<QuerySnapshot>(
+                ),
+                Expanded(
+                  child: StreamBuilder<QuerySnapshot>(
                     stream: controller.getBarangRiwayat(snapshot.data!.id),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -123,67 +121,38 @@ class HistoryInfoView extends GetView<HistoryInfoController> {
                                 .data() as Map<String, dynamic>;
                             return Container(
                               margin: const EdgeInsets.symmetric(
-                                  vertical: 4, horizontal: 12),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 12),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey[300]!),
-                                borderRadius: BorderRadius.circular(8),
+                                vertical: 8.0,
+                                horizontal: 8.0,
                               ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text(
-                                      barangRiwayatData['nama'],
-                                      style: const TextStyle(
-                                        color: Colors.black87,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                      ),
-                                    ),
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: Color.fromRGBO(226, 232, 240, 1),
+                                    width: 2.0,
                                   ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text(
-                                      '${controller.formatCurrency(barangRiwayatData['harga_satuan'])}',
-                                      style: const TextStyle(
-                                        color: Colors.black87,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
+                                ),
+                              ),
+                              child: ListTile(
+                                title: Text(
+                                  barangRiwayatData['nama'],
+                                  style: const TextStyle(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
                                   ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text(
-                                      barangRiwayatData['quantity'].toString(),
-                                      style: const TextStyle(
-                                        color: Colors.black87,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
+                                ),
+                                subtitle: Text(
+                                  '${controller.formatCurrency(barangRiwayatData['harga_satuan'])} x ${barangRiwayatData['quantity']}',
+                                ),
+                                trailing: Text(
+                                  controller.formatCurrency(
+                                    barangRiwayatData['total_harga_barang'],
                                   ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text(
-                                      controller.formatCurrency(
-                                          barangRiwayatData[
-                                              'total_harga_barang']),
-                                      style: const TextStyle(
-                                        color: Colors.black87,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
                                   ),
-                                ],
+                                ),
                               ),
                             );
                           },
@@ -203,25 +172,43 @@ class HistoryInfoView extends GetView<HistoryInfoController> {
                             width: 10.0),
                       ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Total",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
+                  ),
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 12.0, horizontal: 12.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Total",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
                           ),
+                          Text(
+                            controller
+                                .formatCurrency(riwayatData['total_harga']),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      Center(
+                        child: FloatingActionButton.extended(
+                          onPressed: () =>
+                              controller.printDocument(Get.arguments),
+                          icon: Icon(Icons.print, color: Colors.white),
+                          label: Text('Cetak Transaksi',
+                              style: TextStyle(color: Colors.white)),
+                          backgroundColor: const Color(0xFF478755),
                         ),
-                        Text(
-                          controller.formatCurrency(riwayatData['total_harga']),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        )
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -16,6 +16,8 @@ class RegisterController extends GetxController {
         password.isEmpty ||
         name.isEmpty ||
         confirmPassword.isEmpty) {
+  void register(String email, String password, String name, String confirmPassword) async {
+    if (email.isEmpty || password.isEmpty || name.isEmpty || confirmPassword.isEmpty) {
       Get.snackbar(
         'Error',
         'Mohon isi semua kolom.',
@@ -71,8 +73,7 @@ class RegisterController extends GetxController {
     } on FirebaseAuthException catch (e) {
       String errorMessage = 'Terjadi kesalahan. Silakan coba lagi.';
       if (e.code == 'weak-password') {
-        errorMessage =
-            'Password yang Anda masukkan terlalu lemah. Mohon gunakan password yang lebih kuat.';
+        errorMessage = 'Password yang Anda masukkan terlalu lemah. Mohon gunakan password yang lebih kuat.';
       } else if (e.code == 'email-already-in-use') {
         errorMessage = 'Akun sudah ada untuk email tersebut.';
       }
