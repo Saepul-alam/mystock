@@ -220,7 +220,12 @@ class HistoryInfoView extends GetView<HistoryInfoController> {
           'Detail Riwayat',
           style: TextStyle(color: Color(0xffffffff)),
         ),
-        centerTitle: true,
+        // actions: [
+        //   IconButton(
+        //     onPressed: () => controller.printDocument(Get.arguments),
+        //     icon: Icon(Icons.print),
+        //   ),
+        // ],
       ),
       body: FutureBuilder<DocumentSnapshot>(
         future: controller.getRiwayatById(Get.arguments),
@@ -373,42 +378,39 @@ class HistoryInfoView extends GetView<HistoryInfoController> {
                     ),
                   ),
                   margin: const EdgeInsets.symmetric(
-                    vertical: 12.0,
-                    horizontal: 12.0,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      vertical: 12.0, horizontal: 12.0),
+                  child: Column(
                     children: [
-                      const Text(
-                        "Total",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Total",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                          Text(
+                            controller
+                                .formatCurrency(riwayatData['total_harga']),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          )
+                        ],
                       ),
-                      Text(
-                        controller.formatCurrency(riwayatData['total_harga']),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                      const SizedBox(height: 5),
+                      Center(
+                        child: FloatingActionButton.extended(
+                          onPressed: () =>
+                              controller.printDocument(Get.arguments),
+                          icon: Icon(Icons.print, color: Colors.white),
+                          label: Text('Cetak Transaksi',
+                              style: TextStyle(color: Colors.white)),
+                          backgroundColor: const Color(0xFF478755),
                         ),
-                      ),
-                      const SizedBox(height: 30),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Menyiapkan argumen yang diperlukan
-                          List<Map<String, dynamic>> barangRiwayatData =
-                              []; // Ganti dengan data barang riwayat yang sesuai
-                          String jenis =
-                              ''; // Ganti dengan jenis riwayat yang sesuai
-                          int tanggal =
-                              0; // Ganti dengan tanggal riwayat yang sesuai
-
-                          // Memanggil metode printPdf dengan argumen yang disiapkan
-                          controller.printPdf(
-                              barangRiwayatData, jenis, tanggal);
-                        },
-                        child: Text('Cetak Riwayat'),
                       ),
                     ],
                   ),
