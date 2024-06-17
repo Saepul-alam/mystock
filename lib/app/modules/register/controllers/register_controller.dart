@@ -16,14 +16,12 @@ class RegisterController extends GetxController {
         password.isEmpty ||
         name.isEmpty ||
         confirmPassword.isEmpty) {
-  void register(String email, String password, String name, String confirmPassword) async {
-    if (email.isEmpty || password.isEmpty || name.isEmpty || confirmPassword.isEmpty) {
       Get.snackbar(
         'Error',
         'Mohon isi semua kolom.',
         snackPosition: SnackPosition.TOP,
-        duration: Duration(seconds: 3),
-        margin: EdgeInsets.all(12),
+        duration: const Duration(seconds: 3),
+        margin: const EdgeInsets.all(12),
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -35,8 +33,8 @@ class RegisterController extends GetxController {
         'Error',
         'Password dan Konfirmasi Password tidak cocok.',
         snackPosition: SnackPosition.TOP,
-        duration: Duration(seconds: 3),
-        margin: EdgeInsets.all(12),
+        duration: const Duration(seconds: 3),
+        margin: const EdgeInsets.all(12),
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -54,8 +52,8 @@ class RegisterController extends GetxController {
         'Success',
         'Pendaftaran berhasil. Silakan verifikasi email Anda untuk melanjutkan.',
         snackPosition: SnackPosition.TOP,
-        duration: Duration(seconds: 5),
-        margin: EdgeInsets.all(12),
+        duration: const Duration(seconds: 5),
+        margin: const EdgeInsets.all(12),
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
@@ -73,7 +71,8 @@ class RegisterController extends GetxController {
     } on FirebaseAuthException catch (e) {
       String errorMessage = 'Terjadi kesalahan. Silakan coba lagi.';
       if (e.code == 'weak-password') {
-        errorMessage = 'Password yang Anda masukkan terlalu lemah. Mohon gunakan password yang lebih kuat.';
+        errorMessage =
+            'Password yang Anda masukkan terlalu lemah. Mohon gunakan password yang lebih kuat.';
       } else if (e.code == 'email-already-in-use') {
         errorMessage = 'Akun sudah ada untuk email tersebut.';
       }
@@ -82,8 +81,8 @@ class RegisterController extends GetxController {
         'Error',
         errorMessage,
         snackPosition: SnackPosition.TOP,
-        duration: Duration(seconds: 5),
-        margin: EdgeInsets.all(12),
+        duration: const Duration(seconds: 5),
+        margin: const EdgeInsets.all(12),
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );

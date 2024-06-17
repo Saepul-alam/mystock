@@ -11,7 +11,7 @@ class HistoryInfoView extends GetView<HistoryInfoController> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Color.fromARGB(255, 14, 1, 39),
+        backgroundColor: const Color.fromARGB(255, 14, 1, 39),
         title: const Text(
           'Detail Riwayat',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -160,21 +160,18 @@ class HistoryInfoView extends GetView<HistoryInfoController> {
                       }
                     },
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 12),
-                    margin: const EdgeInsets.symmetric(
-                        vertical: 12.0, horizontal: 12.0),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(
-                            color: Color.fromRGBO(226, 232, 240, 1),
-                            width: 10.0),
-                      ),
-                    ),
-                  ),
+                ),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
                   margin: const EdgeInsets.symmetric(
                       vertical: 12.0, horizontal: 12.0),
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      top: BorderSide(
+                          color: Color.fromRGBO(226, 232, 240, 1), width: 10.0),
+                    ),
+                  ),
                   child: Column(
                     children: [
                       Row(
@@ -202,16 +199,16 @@ class HistoryInfoView extends GetView<HistoryInfoController> {
                         child: FloatingActionButton.extended(
                           onPressed: () =>
                               controller.printDocument(Get.arguments),
-                          icon: Icon(Icons.print, color: Colors.white),
-                          label: Text('Cetak Transaksi',
+                          icon: const Icon(Icons.print, color: Colors.white),
+                          label: const Text('Cetak Transaksi',
                               style: TextStyle(color: Colors.white)),
                           backgroundColor: const Color(0xFF478755),
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             );
           }
         },

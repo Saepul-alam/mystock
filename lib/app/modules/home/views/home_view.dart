@@ -15,7 +15,7 @@ class HomeView extends GetView<HomeController> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 14, 1, 39),
+          backgroundColor: const Color.fromARGB(255, 14, 1, 39),
           title: const Text(
             'SRI REZEKI',
             style: TextStyle(
@@ -35,7 +35,7 @@ class HomeView extends GetView<HomeController> {
             controller.exitButton(),
           ],
           flexibleSpace: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
                   Color.fromARGB(255, 14, 1, 39),
@@ -51,7 +51,10 @@ class HomeView extends GetView<HomeController> {
           children: [
             TabBar(
               indicatorColor: Color.fromARGB(221, 180, 166, 40),
-              tabs: const [
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicatorWeight: 5,
+              labelColor: Color.fromARGB(255, 14, 1, 39),
+              tabs: [
                 Tab(
                   child: Text(
                     'Stok',

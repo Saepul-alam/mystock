@@ -1,17 +1,16 @@
-  import 'package:firebase_auth/firebase_auth.dart';
-  import 'package:flutter/material.dart';
-  import 'package:mystock/app/routes/app_pages.dart';
-  import 'package:flutter/widgets.dart';
-  import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:mystock/app/routes/app_pages.dart';
+import 'package:get/get.dart';
 
-  class LoginController extends GetxController {
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-    FirebaseAuth auth = FirebaseAuth.instance;
-    // bool obscureText = true;
+class LoginController extends GetxController {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  FirebaseAuth auth = FirebaseAuth.instance;
+  // bool obscureText = true;
 
-    Stream<User?> get streamAuthStatus =>
-        FirebaseAuth.instance.authStateChanges();
+  Stream<User?> get streamAuthStatus =>
+      FirebaseAuth.instance.authStateChanges();
 
   void login(String email, String password) async {
     try {
@@ -75,15 +74,12 @@
     } catch (e) {
       print(e);
     }
-
-    // void togglePasswordVisibility() {
-    //   obscureText = !obscureText;
-    // }
-
-    @override
-    void onClose() {
-      emailController.dispose();
-      passwordController.dispose();
-      super.onClose();
-    }
   }
+
+  @override
+  void onClose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.onClose();
+  }
+}
