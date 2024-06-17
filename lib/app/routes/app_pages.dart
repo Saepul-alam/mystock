@@ -4,8 +4,12 @@ import '../modules/create/bindings/create_binding.dart';
 import '../modules/create/views/create_view.dart';
 import '../modules/history/bindings/history_binding.dart';
 import '../modules/history/views/history_view.dart';
+import '../modules/history_barang/bindings/history_barang_binding.dart';
+import '../modules/history_barang/views/history_barang_view.dart';
 import '../modules/history_info/bindings/history_info_binding.dart';
 import '../modules/history_info/views/history_info_view.dart';
+import '../modules/history_penjualan/bindings/history_penjualan_binding.dart';
+import '../modules/history_penjualan/views/history_penjualan_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
@@ -86,6 +90,16 @@ class AppPages {
       name: _Paths.HISTORY_INFO,
       page: () => const HistoryInfoView(),
       binding: HistoryInfoBinding(),
+    ),
+    GetPage(
+      name: _Paths.HISTORY_PENJUALAN,
+      page: () => const HistoryPenjualanView(),
+      binding: HistoryPenjualanBinding(),
+    ),
+    GetPage(
+      name: _Paths.HISTORY_BARANG,
+      page: () => const HistoryBarangView(),
+      binding: HistoryBarangBinding(),
     ),
   ];
 }
