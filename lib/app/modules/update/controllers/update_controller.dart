@@ -40,7 +40,7 @@ class UpdateController extends GetxController {
       Get.snackbar(
         'Success',
         'Data updated successfully',
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         duration: const Duration(seconds: 2),
         margin: const EdgeInsets.all(12),
         colorText: Colors.white,
@@ -50,7 +50,7 @@ class UpdateController extends GetxController {
       Get.snackbar(
         'Error',
         'Failed updating data',
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         duration: const Duration(seconds: 2),
         margin: const EdgeInsets.all(12),
       );

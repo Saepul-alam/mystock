@@ -11,7 +11,7 @@ class SplashView extends GetView<SplashController> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/bg-splashscreen.png'),
+            image: AssetImage('assets/images/bg-splashscreen1.png'),
             fit: BoxFit.cover,
           ),
         ),

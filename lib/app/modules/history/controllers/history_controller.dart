@@ -199,7 +199,7 @@ class HistoryController extends GetxController {
       Get.snackbar(
         'Error',
         'Failed to print: $e',
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
       );
     }
   }

@@ -26,7 +26,7 @@ class UpdateView extends GetView<UpdateController> {
                     child: const Text(
                       'Update Barang',
                       style: TextStyle(
-                        color: Color(0xFF478755),
+                        color: const Color.fromARGB(255, 14, 1, 39),
                         fontWeight: FontWeight.w500,
                         fontSize: 30,
                       ),
@@ -79,7 +79,7 @@ class UpdateView extends GetView<UpdateController> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        backgroundColor: Color(0xFF478755),
+                        backgroundColor: const Color.fromARGB(255, 14, 1, 39),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(32.0),
                         ),

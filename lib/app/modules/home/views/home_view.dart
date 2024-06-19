@@ -50,7 +50,7 @@ class HomeView extends GetView<HomeController> {
         body: const Column(
           children: [
             TabBar(
-              indicatorColor: Color.fromARGB(221, 180, 166, 40),
+              indicatorColor: const Color.fromARGB(255, 14, 1, 39),
               indicatorSize: TabBarIndicatorSize.tab,
               indicatorWeight: 5,
               labelColor: Color.fromARGB(255, 14, 1, 39),

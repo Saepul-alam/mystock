@@ -45,25 +45,23 @@ class StockController extends GetxController {
           onConfirm: () {
             _firestore.collection('barang').doc(docID).delete();
             Get.back();
-            Get.snackbar(
-              'Success',
-              'Data deleted successfully',
-              snackPosition: SnackPosition.BOTTOM,
-              duration: const Duration(seconds: 2),
-              margin: const EdgeInsets.all(12),
-            );
+            Get.snackbar('Success', 'Data deleted successfully',
+                snackPosition: SnackPosition.TOP,
+                duration: const Duration(seconds: 2),
+                margin: const EdgeInsets.all(12),
+                colorText: Colors.white,
+                backgroundColor: Colors.green);
           },
           textConfirm: "Yes, I'm sure",
           textCancel: "No");
     } catch (e) {
       print(e);
-      Get.snackbar(
-        'Error',
-        'Cannot delete this Barang',
-        snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 2),
-        margin: const EdgeInsets.all(12),
-      );
+      Get.snackbar('Error', 'Cannot delete this Barang',
+          snackPosition: SnackPosition.TOP,
+          duration: const Duration(seconds: 2),
+          margin: const EdgeInsets.all(12),
+          colorText: Colors.white,
+          backgroundColor: Colors.red);
     }
   }
 

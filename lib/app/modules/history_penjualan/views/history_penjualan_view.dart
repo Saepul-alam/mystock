@@ -25,7 +25,7 @@ class HistoryPenjualanView extends GetView<HistoryPenjualanController> {
         }),
         actions: [
           IconButton(
-            icon: const Icon(Icons.filter_alt),
+            icon: const Icon(Icons.calendar_month),
             onPressed: () => controller.filterdate(context),
           ),
           IconButton(
@@ -163,7 +163,6 @@ class HistoryPenjualanView extends GetView<HistoryPenjualanController> {
           },
         );
       }),
-
     );
   }
 }
