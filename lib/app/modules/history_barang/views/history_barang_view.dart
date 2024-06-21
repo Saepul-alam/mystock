@@ -22,7 +22,7 @@ class HistoryBarangView extends GetView<HistoryBarangController> {
         }),
         actions: [
           IconButton(
-            icon: const Icon(Icons.filter_alt),
+            icon: const Icon(Icons.calendar_month),
             onPressed: () => controller.filterdate(context),
           ),
           IconButton(
