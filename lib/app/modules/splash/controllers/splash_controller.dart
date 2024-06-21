@@ -17,7 +17,8 @@ class SplashController extends GetxController {
   void onReady() {
     super.onReady();
     print("onready splashscreencontroller");
-    if (GetStorage().read("status") != "" && GetStorage().read("status") != null) {
+    if (GetStorage().read("status") != "" &&
+        GetStorage().read("status") != null) {
       Future.delayed(const Duration(seconds: 3), () {
         Get.offAllNamed(Routes.LOGIN);
       });

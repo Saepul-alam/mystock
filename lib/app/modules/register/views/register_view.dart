@@ -54,7 +54,7 @@ class _RegisterViewState extends State<RegisterView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Username',
+                            'Email',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
