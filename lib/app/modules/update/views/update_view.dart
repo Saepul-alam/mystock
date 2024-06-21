@@ -17,24 +17,24 @@ class UpdateView extends GetView<UpdateController> {
             controller.stockController.text = data['stock'].toString();
             controller.hargaController.text = data['harga'];
             return Padding(
-              padding: EdgeInsets.all(30),
+              padding: const EdgeInsets.all(30),
               child: ListView(
                 children: [
                   Container(
                     alignment: Alignment.center,
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: const Text(
                       'Update Barang',
                       style: TextStyle(
-                        color: Color(0xFF478755),
+                        color: Color.fromARGB(255, 14, 1, 39),
                         fontWeight: FontWeight.w500,
                         fontSize: 30,
                       ),
                     ),
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   Container(
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: TextField(
                       controller: controller.namaController,
                       decoration: InputDecoration(
@@ -72,14 +72,14 @@ class UpdateView extends GetView<UpdateController> {
                       textInputAction: TextInputAction.done,
                     ),
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   Container(
                     height: 50,
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        backgroundColor: Color(0xFF478755),
+                        backgroundColor: const Color.fromARGB(255, 14, 1, 39),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(32.0),
                         ),
@@ -99,7 +99,7 @@ class UpdateView extends GetView<UpdateController> {
               ),
             );
           }
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
