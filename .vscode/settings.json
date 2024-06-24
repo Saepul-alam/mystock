@@ -1,0 +1,11 @@
+{
+    "editor.accessibilitySupport": "on",
+    "editor.cursorStyle": "line",
+    "editor.wordWrap": "on",
+    "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+    "color-highlight.matchHslWithNoFunction": true,
+    "color-highlight.matchRgbWithNoFunction": true,
+    "color-highlight.matchWords": true,
+    "dart.flutterOutline": true,
+    "dart.enableCompletionCommitCharacters": true
+}

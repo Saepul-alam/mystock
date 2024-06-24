@@ -137,14 +137,14 @@ class _RegisterViewState extends State<RegisterView> {
                           const SizedBox(height: 5),
                           TextField(
                             controller: controller.confirmPasswordController,
-                            obscureText: _obscureText,
+                            obscureText: _confirmObscureText,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               suffixIcon: IconButton(
                                 // onPressed: () =>
                                 //     controller.togglePasswordVisibility(),
-                                icon: Icon(_obscureText
+                                icon: Icon(_confirmObscureText
                                     ? Icons.visibility
                                     : Icons.visibility_off),
                                 onPressed: _toggleConfirmPasswordVisibility,
